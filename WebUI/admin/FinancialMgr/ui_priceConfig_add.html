@@ -1,0 +1,55 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_priceConfig_priceConfigaddform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                单价类型：
+            </th>
+            <td>
+                <input type="text" name="ui_priceConfig_PriceTypeName_add" id="ui_priceConfig_PriceTypeName_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                配置类型：
+            </th>
+            <td>
+                <select id="ui_priceConfig_ConfigType_add" class="easyui-combobox" name="ui_priceConfig_ConfigType_add" data-options="required:true" style="width:100px;">   
+                    <option value="0">车辆</option>  
+                    <option value="1">场地</option> 
+                </select>
+            </td>
+        </tr> 
+       <!-- <tr>
+            <th>
+                配置类型Test：
+            </th>
+            <td>
+                <input id="ccTest" class="easyui-combobox" name="ccTest"   
+                    data-options="valueField:'Price',textField:'PriceTypeName',
+                    url:'/FinancialMgr/bg_priceConfigHandler.ashx?action=getAll',
+                    onSelect: function(){    
+                     alert('OK'); }" /> 
+            </td>
+        </tr> -->
+        <tr>
+            <th>
+                单价：
+            </th>
+            <td>
+                <input type="text" name="ui_priceConfig_Price_add" id="ui_priceConfig_Price_add" class="easyui-numberbox"
+                   data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="4" cols="40" name="ui_priceConfig_Remark_add" id="ui_priceConfig_Remark_add"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

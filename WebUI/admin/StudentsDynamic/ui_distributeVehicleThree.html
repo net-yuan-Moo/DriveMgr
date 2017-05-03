@@ -1,0 +1,309 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=distributeVehicleThree&pagename=ui_distributeVehicleThree",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_distributeVehicleThree_dg").datagrid({       //初始化datagrid
+                            url: "StudentsDynamic/bg_distributeVehicleHandler.ashx?action=search",
+                            queryParams: { subject: 3 },
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'VehicleID',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'StudentsID',
+                            sortOrder: 'desc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             { field: 'ck', checkbox: true },
+                                             {
+                                                 width: 100,
+                                                 title: '学员姓名',
+                                                 field: 'StudentsName',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 8 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }, {
+                                                 width: 180,
+                                                 title: '学员编号',
+                                                 field: 'StudentCode',
+                                                 sortable: true
+                                             }]],
+                            columns: [[
+                                       {
+                                           field: 'SubjectName', title: '科目', sortable: true, width: 180, align: 'center'
+
+                                       }, {
+                                           field: 'LicencePlateNum', title: '车牌号', sortable: true, width: 100, align: 'center'
+
+                                       }, {
+                                           field: 'DistributeVihicleStatus', title: '分车状态', sortable: true, width: 100, align: 'center',
+                                           formatter: function (value, row, index) {
+                                               switch (value) {
+                                                   case 0:
+                                                       return "<span style='color:red;'>未分车</span>";
+                                                   case 1:
+                                                       return "<span style='color:green;'>已分车</span>";
+                                               }
+                                           }
+
+                                       }, {
+                                           field: 'CreateTime', title: '创建时间', sortable: true, width: 100, align: 'center'
+
+                                       }, {
+                                           field: 'Operater', title: '创建人', sortable: true, width: 200, align: 'center'
+
+                                       }
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                //被编辑列高亮，其他列去除高亮
+                                $("#ui_distributeVehicleThree_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                ui_distributeVehicleThree_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_distributeVehicleThree_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_distributeVehicleThree_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_distributeVehicleThree_searchdata();
+            }
+        })
+    });
+
+    //自动分配车辆
+    function ui_distributeVehicleThree_autoDistributeVehicle() {
+        $.messager.confirm('科目三自动分配车辆', '是否进行科目三自动分配车辆?', function (r) {
+            if (r) {
+                //开始分配学员
+                $.ajax({     //请求当前用户可以操作的按钮
+                    url: "StudentsDynamic/bg_distributeVehicleHandler.ashx",
+                    type: "post",
+                    data: { "action": "autoDistributeVehicle", subject: 3 },
+                    dataType: "json",
+                    timeout: 5000,
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_distributeVehicleThree_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        if (textStatus == "timeout") {
+                            $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                        }
+                        else {
+                            $.show_warning("错误", textStatus + "：" + errorThrown);
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    //修改分配车辆
+    function ui_distributeVehicleThree_edit() {
+        var row = $("#ui_distributeVehicleThree_dg").datagrid("getSelections");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要修改的分配车辆信息");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量修改");
+            $("#ui_distributeVehicleThree_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_distributeVehicleThree_edit_dialog",
+            href: "StudentsDynamic/ui_distributeVehicle_edit.html",
+            title: "修改科目三分配车辆信息",
+            height: 200,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_distributeVehicleThree_edit_btn",
+                text: '修 改',
+                handler: function () {
+                    $("#ui_distributeVehicle_editform").form("submit", {
+                        url: "StudentsDynamic/bg_distributeVehicleHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_distributeVehicleThree_edit_btn').linkbutton('disable');   //点击就禁用按钮，防止连击
+                            param.action = 'edit';
+                            param.subject = 3;
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                alert("tmds");
+                                $('#ui_distributeVehicleThree_edit_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_distributeVehicleThree_edit_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_distributeVehicleThree_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_distributeVehicleThree_edit_btn').linkbutton('enable');    //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#ui_distributeVehicleid_edit").val(row[0].ID);
+                $("#ui_distributeVehicle_name_edit").text(row[0].StudentsName);
+                $("#ui_distributeVehicle_code_edit").text(row[0].StudentCode);
+
+                $("#ui_distributeVehicle_vehicle_edit").combobox('setValue', row[0].VehicleID);
+            },
+            onClose: function () {
+                $("#ui_distributeVehicleThree_edit_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+
+    //添加用户
+    function ui_distributeVehicle_add() {
+        $("<div/>").dialog({
+            id: "ui_distributeVehicle_add_dialog",
+            href: "StudentsDynamic/ui_distributeVehicle_add.html",
+            title: "添加用户",
+            height: 350,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_distributeVehicle_add_btn",
+                text: '添 加',
+                handler: function () {
+                    $("#ui_distributeVehicle_addform").form("submit", {
+                        url: "StudentsDynamic/bg_distributeVehicleHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_distributeVehicle_add_btn').linkbutton('disable');    //点击就禁用按钮，防止连击
+                            param.action = 'add';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_distributeVehicle_add_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_distributeVehicle_add_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_distributeVehicle_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_distributeVehicle_add_btn').linkbutton('enable');   //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                //$("#ui_user_userid_add").focus();
+            },
+            onClose: function () {
+                $("#ui_distributeVehicle_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+
+    function ui_distributeVehicleThree_searchdata() {
+        $("#ui_distributeVehicleThree_dg").datagrid('load', {
+            ui_distributeVehicle_name: $('#ui_distributeVehicleThree_search').find('[name=ui_distributeVehicleThree_name]').val(),
+            ui_distributeVehicle_code: $('#ui_distributeVehicleThree_search').find('[name=ui_distributeVehicleThree_code]').val(),
+            ui_distributeVehicle_vehicle: $('#ui_distributeVehicleThree_search').find('[name=ui_distributeVehicleThree_vehicle]').val(),
+            subject: 3
+        });
+        $("#ui_distributeVehicleThree_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_archives_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_distributeVehicleThree_cleardata() {
+        $('#ui_distributeVehicleThree_search input').val('');
+        $('#ui_distributeVehicleThree_search select').val('select');
+        ui_distributeVehicleThree_searchdata();
+        //$("#ui_distributeVehicle_dg").datagrid('load', {});
+
+        $("#ui_distributeVehicleThree_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_archives_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+<div id="ui_distributeVehicleThree_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_distributeVehicleThree_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        学员姓名：
+                    </th>
+                    <td>
+                        <input name="ui_distributeVehicleThree_name" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        学员编号：
+                    </th>
+                    <td>
+                        <input name="ui_distributeVehicleThree_code" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        车牌号：
+                    </th>
+                    <td>
+                   <!--     <input name="ui_distributeVehicle_vehicle" autocomplete="off" style="width: 130px;" />-->
+                        <input id="ui_distributeVehicleThree_vehicle" class="easyui-combobox" name="ui_distributeVehicleThree_vehicle"   
+                    data-options="valueField:'Id',textField:'LicencePlateNum',url:'FinancialMgr/bg_vehicleHandler.ashx?action=getVehicleDT'" /> 
+                    </td>
+                </tr>
+              
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_distributeVehicleThree_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_distributeVehicleThree_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_distributeVehicleThree_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

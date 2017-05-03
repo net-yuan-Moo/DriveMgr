@@ -1,0 +1,361 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前出库单可以操作的按钮            
+            url: "ashx/bg_button.ashx?menucode=outStoreHouse&pagename=ui_outStoreHouse",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var outStoreHouseId;
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限                        
+                        $("#ui_outStoreHouse_dg").datagrid({       //初始化datagrid
+                            url: "GoodsMgr/bg_outStoreHouseHandler.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'Id',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'id',
+                            sortOrder: 'desc',
+                            singleSelect: true,
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             {
+                                                 width: 200,
+                                                 title: '出库单号',
+                                                 field: 'OutSN',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }]],
+                            columns: [[
+                                       { field: 'OutDate', title: '出库时间', sortable: true, width: 200 },
+                                       {
+                                           field: 'HandlePerson', title: '办理人', sortable: true, width: 100, align: 'center',
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },                                       
+                                       {
+                                           field: 'CreatePerson', title: '创建人', sortable: true, width: 100,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       { field: 'CreateDate', title: '添加时间', sortable: true, width: 200 }
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前出库单可以操作的按钮
+                    //        onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                    //            //被编辑列高亮，其他列去除高亮
+                    //            $("#ui_outStoreHouse_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                    //            ui_outStoreHouse_edit();
+                    //        }
+                    //    });
+                            //}
+
+                            onClickRow: function (row) {
+                                var row = $("#ui_outStoreHouse_dg").datagrid("getChecked");
+                                
+                                if (outStoreHouseId == row[0].Id) {  //点选的是相同就不再请求数据
+                                    return;
+                                }
+                                outStoreHouseId = row[0].Id;   //赋值
+
+                                var ui_outStoreHouse_layout = $("#ui_outStoreHouse_layout");
+                                var outStoreHouseDetails = ui_outStoreHouse_layout.layout("panel", "west");
+
+                                if (outStoreHouseDetails.panel("options").collapsed) {   //判断是否展开
+                                    ui_outStoreHouse_layout.layout("expand", "west");
+                                }
+
+                                if ($("#ui_outStoreHouse_Details_dg").data("datagrid")) {
+                                    $("#ui_outStoreHouse_Details_dg").datagrid({       //请求数据
+                                        url: "GoodsMgr/bg_outStoreHouseDetailsHandler.ashx?action=searchEnterStoreHouseDetails&outStoreHouseID=" + outStoreHouseId
+                                    });
+                                }
+                                else {
+                                    $("#ui_outStoreHouse_Details_dg").datagrid({       //初始化datagrid
+                                        url: "GoodsMgr/bg_outStoreHouseDetailsHandler.ashx?action=searchEnterStoreHouseDetails&outStoreHouseID=" + outStoreHouseId,
+                                        striped: true, rownumbers: true, pagination: true, pageSize: 20, singleSelect: true,
+                                        idField: 'Id',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                                        sortName: 'id',
+                                        sortOrder: 'desc',
+                                        pageList: [20, 40, 60, 80, 100],
+                                        frozenColumns: [[
+                                                         {
+                                                             width: 100,
+                                                             title: '出库明细编号',
+                                                             field: 'OutDetailsSN',
+                                                             sortable: true,
+                                                             formatter: function (value, row, index) {
+                                                                 return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                             }
+                                                         }]],
+                                        columns: [[
+                                                   {
+                                                       field: 'GoodsName', title: '物品名', sortable: true, width: 100, align: 'center',
+                                                       formatter: function (value, row, index) {
+                                                           return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                       }
+                                                   },
+                                                   {
+                                                       field: 'CategoryName', title: '类别', sortable: true, width: 100,
+                                                       formatter: function (value, row, index) {
+                                                           return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                       }
+                                                   },
+                                                   {
+                                                       field: 'OutQuantity', title: '数量', sortable: true, width: 50,
+                                                       formatter: function (value, row, index) {
+                                                           return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                       }
+                                                   }
+
+                                        ]]
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_outStoreHouse_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_outStoreHouse_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_outStoreHouse_searchdata();
+            }
+        })
+    });
+
+    //删除出库单（可批量）
+    function ui_outStoreHouse_delete() {
+        var rows = $("#ui_outStoreHouse_dg").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.show_warning("提示", "请选择需要删除的出库单信息");
+            return;
+        }
+        $.messager.confirm('提示', '确定删除所选的这' + rows.length + '个出库单信息？', function (r) {
+            if (r) {
+                para = {};
+                para.action = "delete";
+                para.timespan = new Date().getTime();
+                para.id = "";
+                $.each(rows, function (i, row) {
+                    para.id += row.Id + ",";
+                });
+                $.ajax({
+                    url: "GoodsMgr/bg_outStoreHouseHandler.ashx",
+                    data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_outStoreHouse_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        } else {
+                            $.show_warning("提示", data.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function ui_outStoreHouse_searchdata() {
+        $("#ui_outStoreHouse_dg").datagrid('load', {
+            ui_outStoreHouse_outSN: $('#ui_outStoreHouse_search').find('[name=ui_outStoreHouse_outSN]').val(),
+            ui_outStoreHouse_createStartDate: $('#ui_outStoreHouse_createStartDate').datebox('getValue'),
+            ui_outStoreHouse_createEndDate: $('#ui_outStoreHouse_createEndDate').datebox('getValue')
+        });
+        $("#ui_outStoreHouse_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_outStoreHouse_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_outStoreHouse_cleardata() {
+        $('#ui_outStoreHouse_search input').val('');
+        $('#ui_outStoreHouse_createStartDate').datebox('setValue', '');
+        $('#ui_outStoreHouse_createEndDate').datebox('setValue', '');
+        $("#ui_outStoreHouse_dg").datagrid('load', {});
+
+        $("#ui_outStoreHouse_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_outStoreHouse_layout').layout('collapse', 'east');    //隐藏
+    }
+
+    function ui_outStoreHouse_add() {
+        $("<div/>").dialog({
+            id: "ui_outStoreHouseDetails_add_dialog",
+            href: "GoodsMgr/ui_outStoreHouseDetails_add.html",
+            title: "出库",
+            height: 400,
+            width: 420,
+            modal: true,
+            onLoad: function () {
+                $("#ui_outStoreHouseDetails_outStoreHouseDetailsid_add").focus();
+            },
+            onClose: function () {
+                $("#ui_outStoreHouseDetails_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+    var editIndex = undefined;
+    function ui_outStoreHouseDetails_endEditing() {
+        if (editIndex == undefined) { return true }
+        if ($('#dg_outStoreHouseDetails').datagrid('validateRow', editIndex)) {
+            var goodsId = $('#dg_outStoreHouseDetails').datagrid('getEditor', { index: editIndex, field: 'GoodsId' });
+            var goodsName = $(goodsId.target).combobox('getText');
+            $('#dg_outStoreHouseDetails').datagrid('getRows')[editIndex]['GoodsName'] = goodsName;
+            $('#dg_outStoreHouseDetails').datagrid('endEdit', editIndex);
+            editIndex = undefined;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function ui_outStoreHouseDetails_onClickRow(index) {
+        if (editIndex != index) {
+            if (ui_outStoreHouseDetails_endEditing()) {
+                $('#dg_outStoreHouseDetails').datagrid('selectRow', index)
+                        .datagrid('beginEdit', index);
+                editIndex = index;
+            } else {
+                $('#dg_outStoreHouseDetails').datagrid('selectRow', editIndex);
+            }
+        }
+    }
+    function ui_outStoreHouseDetails_append() {
+        if (ui_outStoreHouseDetails_endEditing()) {
+            $('#dg_outStoreHouseDetails').datagrid('appendRow', { status: 'P' });
+            editIndex = $('#dg_outStoreHouseDetails').datagrid('getRows').length - 1;
+            $('#dg_outStoreHouseDetails').datagrid('selectRow', editIndex)
+                    .datagrid('beginEdit', editIndex);
+        }
+    }
+    function ui_outStoreHouseDetails_removeit() {
+        if (editIndex == undefined) { return }
+        $('#dg_outStoreHouseDetails').datagrid('cancelEdit', editIndex)
+                .datagrid('deleteRow', editIndex);
+        editIndex = undefined;
+    }
+    function ui_outStoreHouseDetails_accept() {
+
+        if (ui_outStoreHouseDetails_endEditing()) {
+            $('#dg_outStoreHouseDetails').datagrid('acceptChanges');
+        }
+
+        var outDetailStr = "";
+
+        $.each($('#dg_outStoreHouseDetails').datagrid('getRows'), function (i) {
+            if ($('#dg_outStoreHouseDetails').datagrid('getRows')[i]["GoodsId"] != undefined && $('#dg_outStoreHouseDetails').datagrid('getRows')[i]["OutQuantity"] != undefined) {
+                outDetailStr += "{'GoodsId':'" + $('#dg_outStoreHouseDetails').datagrid('getRows')[i]["GoodsId"] + "',";
+                outDetailStr += "'OutQuantity':'" + $('#dg_outStoreHouseDetails').datagrid('getRows')[i]["OutQuantity"] + "'},";
+            }
+
+        });
+
+        if (outDetailStr == "") {
+            alert("没有数据可出库!");
+            return;
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: "GoodsMgr/bg_outStoreHouseDetailsHandler.ashx",
+            data: { action: "add", outDetailStr: outDetailStr },
+            success: function (data) {
+                if (data.success) {
+                    $("#ui_outStoreHouseDetails_add_dialog").dialog('destroy');  //销毁dialog对象
+                    $.show_warning("提示", data.msg);                    
+                    $("#ui_outStoreHouse_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                } else {
+                    $('#ui_outStoreHouseDetails_add_btn').linkbutton('enable');   //恢复按钮
+                    $.show_warning("提示", data.msg);
+                }
+            }
+        })
+    }
+    function ui_outStoreHouseDetails_reject() {
+        $('#dg_outStoreHouseDetails').datagrid('rejectChanges');
+        editIndex = undefined;
+    }
+    function ui_outStoreHouseDetails_getChanges() {
+        var rows = $('#dg_outStoreHouseDetails').datagrid('getChanges');
+        alert(rows.length + ' rows are changed!');
+    }
+</script>
+
+<div id="ui_outStoreHouse_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_outStoreHouse_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">                
+                <tr>
+                    <th>
+                        出库单号：
+                    </th>
+                    <td>
+                        <input name="ui_outStoreHouse_outSN" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>                
+                <tr>
+                    <th>
+                        添加时间：
+                    </th>
+                    <td>
+                        <input name="ui_outStoreHouse_createStartDate" id="ui_outStoreHouse_createStartDate" class="easyui-datebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        至：
+                    </th>
+                    <td>
+                        <input name="ui_outStoreHouse_createEndDate" id="ui_outStoreHouse_createEndDate" class="easyui-datebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_outStoreHouse_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_outStoreHouse_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_outStoreHouse_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+    <div  data-options="region:'west',split:true,border:true,collapsed:true" title="出库明细"
+        style="width: 400px;">
+        <table id="ui_outStoreHouse_Details_dg" data-options="fit:true,border:false">
+        </table>
+    </div>  
+</div>

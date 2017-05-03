@@ -1,0 +1,44 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_priceConfig_priceConfigeditform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                单价类型：
+            </th>
+            <td>
+                <input type="hidden" name="id" id="id" />
+                <input type="text" name="ui_priceConfig_PriceTypeName_edit" id="ui_priceConfig_PriceTypeName_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                配置类型：
+            </th>
+            <td>
+                <select id="ui_priceConfig_ConfigType_edit" class="easyui-combobox" name="ui_priceConfig_ConfigType_edit" data-options="required:true" style="width:100px;">   
+                    <option value="0">车辆</option>  
+                    <option value="1">场地</option> 
+                </select>
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                单价：
+            </th>
+            <td>
+                <input type="text" name="ui_priceConfig_Price_edit" id="ui_priceConfig_Price_edit" class="easyui-numberbox"
+                   data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="4" cols="40" name="ui_priceConfig_Remark_edit" id="ui_priceConfig_Remark_edit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

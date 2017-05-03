@@ -1,0 +1,51 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_travel_traveleditform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                用途：
+            </th>
+            <td>
+                <input type="hidden" name="id" id="id" />
+                <textarea rows="2" cols="50" name="ui_travel_TravelUse_edit" id="ui_travel_TravelUse_edit"
+                    class="easyui-validatebox" data-options="required:true" autocomplete="off"></textarea>
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                出差人：
+            </th>
+            <td>
+                <input type="text" name="ui_travel_TravelPerson_edit" id="ui_travel_TravelPerson_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                费用：
+            </th>
+            <td>
+                <input type="text" name="ui_travel_TravelAmount_edit" id="ui_travel_TravelAmount_edit" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+               经办时间:
+            </th>
+            <td>
+                <input name="ui_travel_TraveDate_edit" id="ui_travel_TraveDate_edit" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="3" cols="50" name="ui_travel_Remark_edit" id="ui_travel_Remark_edit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

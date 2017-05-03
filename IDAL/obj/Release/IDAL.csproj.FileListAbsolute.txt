@@ -1,0 +1,7 @@
+F:\源码\DriveMgr\IDAL\bin\Release\DriveMgr.IDAL.dll
+F:\源码\DriveMgr\IDAL\bin\Release\DriveMgr.IDAL.pdb
+F:\源码\DriveMgr\IDAL\bin\Release\DriveMgr.Model.dll
+F:\源码\DriveMgr\IDAL\bin\Release\DriveMgr.Model.pdb
+F:\源码\DriveMgr\IDAL\obj\Release\IDAL.csprojResolveAssemblyReference.cache
+F:\源码\DriveMgr\IDAL\obj\Release\DriveMgr.IDAL.dll
+F:\源码\DriveMgr\IDAL\obj\Release\DriveMgr.IDAL.pdb

@@ -1,0 +1,60 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_businessEntertain_businessEntertaineditform" method="post" action="">
+    <table class="tableForm" width="100%">
+        <tr>
+            <th>
+                招待对象：
+            </th>
+            <td>
+                <input type="hidden" name="id" id="id" />
+                <input type="text" name="ui_businessEntertain_EntertainObject_edit" id="ui_businessEntertain_EntertainObject_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>     
+        <tr>
+            <th>
+                用途：
+            </th>
+            <td>
+                <textarea rows="2" cols="50" name="ui_businessEntertain_EntertainUse_edit" id="ui_businessEntertain_EntertainUse_edit"
+                    class="easyui-validatebox" data-options="required:true" autocomplete="off"></textarea>
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                经办人：
+            </th>
+            <td>
+                <input type="text" name="ui_businessEntertain_Transactor_edit" id="ui_businessEntertain_Transactor_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                招待费用：
+            </th>
+            <td>
+                <input type="text" name="ui_businessEntertain_EntertainAmount_edit" id="ui_businessEntertain_EntertainAmount_edit" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+               经办时间:
+            </th>
+            <td>
+                <input name="ui_businessEntertain_TransactDate_edit" id="ui_businessEntertain_TransactDate_edit" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="7" cols="50" name="ui_businessEntertain_Remark_edit" id="ui_businessEntertain_Remark_edit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

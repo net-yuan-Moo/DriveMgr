@@ -1,0 +1,109 @@
+﻿<script type="text/javascript">
+    $(function () {
+        var myDate = new Date();
+        var yearStr = myDate.getFullYear();
+        var years = yearStr - 1;
+        var yearst = yearStr - 2;
+
+        var yearString = "<option>" + yearStr + "</option><option>" + years + "</option><option>" + yearst + "</option>";
+        $("#ddlExpensesTableYear").html(yearString);
+
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=ExpensesStatistic&pagename=ui_ExpensesStatistic_table",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    getTableData(); //得到表格数据
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+    });
+
+    function getTableData() {
+        $("#ui_ExpensesStatistic_table_dg").datagrid({       //初始化datagrid
+            url: "Statistics/bg_ExpensesStatisticHandler.ashx",
+            queryParams: { action: "getIncomeTableData", checkedYear: $("#ddlExpensesTableYear").val() },
+            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+            idField: '1月',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+            //sortName: 'StudentCode',
+            //sortOrder: 'desc',
+            pageList: [20, 40, 60, 80, 100],
+            frozenColumns: [[
+                             {
+                                 width: 150,
+                                 title: '出账类型',
+                                 field: '出账类型',
+                                 sortable: false
+                             }]],
+            columns: [[
+                       {
+                           field: '1月', title: '一月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '2月', title: '二月', sortable: false, width: 100, align: 'center'
+
+                       },{
+                           field: '3月', title: '三月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '4月', title: '四月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '5月', title: '五月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '6月', title: '六月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '7月', title: '七月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '8月', title: '八月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '9月', title: '九月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '10月', title: '十月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '11月', title: '十一月', sortable: false, width: 100, align: 'center'
+
+                       }, {
+                           field: '12月', title: '十二月', sortable: false, width: 100, align: 'center'
+
+                       }
+
+            ]],
+            //toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                //被编辑列高亮，其他列去除高亮
+
+            }
+        });
+    }
+</script>
+<div style="margin: 10px;">
+    选择年份：
+    <select id="ddlExpensesTableYear" onchange="getTableData();"></select>
+</div>
+<div id="ui_ExpensesStatistic_table_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'center',border:false">
+        <table id="ui_ExpensesStatistic_table_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

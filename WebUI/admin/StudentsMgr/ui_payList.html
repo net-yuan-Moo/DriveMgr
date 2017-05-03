@@ -1,0 +1,207 @@
+﻿<script type="text/javascript">
+    var timeFun;
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "StudentsMgr/bg_registrationHandler.ashx",
+            type: "post",
+            data: { "action": "bindPeroid" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                var peroidstr = "";
+                for (var i = 0; i < data.length; i++) {
+                    peroidstr += "<option value='" + data[i].ID + "'>" + data[i].PeriodCode + "</option>";
+                }
+                $("#ui_payList_period").html(peroidstr);
+                $.ajax({     //请求当前用户可以操作的按钮
+                    url: "ashx/bg_button.ashx?menucode=payList&pagename=ui_payList",
+                    type: "post",
+                    data: { "action": "getbutton" },
+                    dataType: "json",
+                    timeout: 5000,
+                    success: function (data) {
+                        if (data.success) {
+                            var toolbar = getToolBar(data);    //common.js
+                            var qPeroid = $('#ui_payList_period').val();
+                            if (data.browser) {    //判断是否有浏览权限
+                                $("#ui_payList_dg").datagrid({       //初始化datagrid
+                                    url: "StudentsMgr/payListHandler.ashx?action=search",
+                                    striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                                    idField: 'StudentsID',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                                    sortName: 'StudentsID',
+                                    sortOrder: 'desc',
+                                    pageList: [20, 40, 60, 80, 100],
+                                    queryParams: { ui_students_period: qPeroid },
+                                    frozenColumns: [[
+                                                     { field: 'ck', checkbox: true },
+                                                     {
+                                                         width: 100,
+                                                         title: '学员姓名',
+                                                         field: 'StudentsName',
+                                                         sortable: true,
+                                                         formatter: function (value, row, index) {
+                                                             return value.length > 8 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                         }
+                                                     }, {
+                                                         width: 150,
+                                                         title: '学员编号',
+                                                         field: 'StudentCode',
+                                                         sortable: true
+                                                     }]],
+                                    columns: [[
+                                               {
+                                                   field: 'PeriodCode', title: '期数', sortable: true, width: 150, align: 'center'
+
+                                               },{
+                                                   field: 'TotalPrice', title: '缴费金额(元)', sortable: true, width: 200, align: 'center'
+
+                                               }, {
+                                                   field: 'CreateDate', title: '创建时间', sortable: true, width: 250, align: 'center'
+
+                                               }, {
+                                                   field: 'CreatePerson', title: '操作人', sortable: true, width: 300, align: 'center'
+
+                                               }
+
+                                    ]],
+                                    toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                                    onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                        //被编辑列高亮，其他列去除高亮
+                                        $("#ui_payList_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                        ui_registration_edit();
+                                    }
+                                });
+                            }
+                            else {
+                                $("#ui_payList_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                                $.show_warning("提示", "无权限，请联系管理员！");
+                            }
+                        } else {
+                            $.show_warning("错误", data.result);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        if (textStatus == "timeout") {
+                            $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                        }
+                        else {
+                            $.show_warning("错误", textStatus + "：" + errorThrown);
+                        }
+                    }
+                })
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+
+        //回车搜索
+        $("#ui_payList_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_payList_searchdata();
+            }
+        })
+    });
+
+    //按照条件查询
+    function ui_payList_searchdata() {
+        $("#ui_payList_dg").datagrid('load', {
+
+            ui_students_name: $('#ui_payList_search').find('[name=ui_payList_name]').val(),
+            ui_students_code: $('#ui_payList_search').find('[name=ui_payList_code]').val(),
+            ui_students_cardnum: $('#ui_payList_search').find('[name=ui_payList_cardnum]').val(),
+            ui_students_status: $('#ui_payList_search').find('[name=ui_payList_status]').val(),
+            ui_pay_status: $('#ui_payList_search').find('[name=ui_payList_status]').val(),
+            ui_students_period: $('#ui_payList_search').find('[name=ui_payList_period]').val()
+        });
+        $("#ui_payList_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_registration_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_payList_cleardata() {
+        $('#ui_payList_search input').val('');
+        //$('#ui_registration_search select').val('select');
+        document.getElementById("ui_payList_period").options[0].selected = true;
+        $("#ui_payList_dg").datagrid('load', {});
+
+        $("#ui_payList_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_registration_layout').layout('collapse', 'east');    //隐藏
+    }
+
+    function bindPeroid() {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "StudentsMgr/bg_registrationHandler.ashx",
+            type: "post",
+            data: { "action": "bindPeroid" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                var peroidstr = "";
+                for (var i = 0; i < data.length; i++) {
+                    peroidstr += "<option value='" + data[i].ID + "'>" + data[i].PeriodCode + "</option>";
+                }
+                $("#ui_students_period").html(peroidstr);
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+    }
+</script>
+<div id="ui_payList_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_payList_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>学员姓名：
+                    </th>
+                    <td>
+                        <input name="ui_payList_name" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>学员编号：
+                    </th>
+                    <td>
+                        <input name="ui_payList_code" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>期数：
+                    </th>
+                    <td>
+                        <select name="ui_payList_period" id="ui_payList_period">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_payList_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_payList_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_payList_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

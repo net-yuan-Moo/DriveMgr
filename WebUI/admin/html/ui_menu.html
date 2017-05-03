@@ -1,0 +1,325 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=menu&pagename=ui_menu",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);      //common.js
+                    if (data.browser) {     //判断是否有浏览权限
+                        $("#ui_menu_dg").datagrid({       //初始化datagrid
+                            url: "ashx/bg_menu.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20, singleSelect: true, multiSort: true,
+                            idField: 'Id',
+                            sortName: 'ParentId,Sort',
+                            sortOrder: 'asc,asc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             { field: 'Id', title: '菜单ID', width: 60 },
+                                             { field: 'Name', title: '菜单名称', width: 100 }
+                            ]],
+                            columns: [[
+                                       { field: 'ParentId', title: '父节点ID', sortable: true, width: 80 },
+                                       { field: 'Code', title: '标识码', width: 120 },
+                                       { field: 'LinkAddress', title: '链接地址', width: 200 },
+                                       { field: 'Icon', title: '图标', width: 150 },
+                                       { field: 'Sort', title: '排序', sortable: true, width: 80 },
+                                       { field: 'AddDate', title: '添加时间', width: 130 }
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                ui_menu_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+    });
+
+    function ui_menu_setbutton() {
+        var row = $("#ui_menu_dg").datagrid("getChecked");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要分配按钮的菜单");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "无法批量分配菜单对应的按钮");
+            $("#ui_menu_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        if (row[0].ParentId == 0 || row[0].ParentId == "") {
+            $.show_warning("提示", "根节点无法分配按钮");
+            $("#ui_menu_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        //$.show_warning("提示", "菜单分配按钮");
+        //初始化dialog
+        $("<div/>").dialog({
+            id: "ui_button_distribute_dialog",
+            href: "html/ui_button_distribute.html",
+            title: "分配按钮：" + row[0].Name,
+            height: 500,
+            width: 300,
+            modal: true,
+            buttons: [{
+                id: "ui_button_distribute_btn",
+                text: '分 配',
+                handler: function () {
+                    $('#ui_button_distribute_btn').linkbutton('disable');
+                    doDistribute(row[0].Id);  //保存分配信息
+                }
+            }],
+            onLoad: function () {
+                initeData(row[0].Id);
+              
+                //$('#tree_menu_distribute_button').tree({
+                //    //data: [{"id":"-1","text":"所有按钮","children":[{"id":"1","text":"浏览","checked":true,"attributes":{"menuid":"1","buttonid":"1"}},{"id":"3","text":"添加","checked":true,"attributes":{"menuid":"3","buttonid":"3"}},{"id":"4","text":"修改","checked":true,"attributes":{"menuid":"4","buttonid":"4"}},{"id":"5","text":"删除","checked":true,"attributes":{"menuid":"5","buttonid":"5"}},{"id":"6","text":"导出","checked":true,"attributes":{"menuid":"6","buttonid":"6"}},{"id":"7","text":"部门设置","checked":true,"attributes":{"menuid":"7","buttonid":"7"}},{"id":"8","text":"角色设置","checked":true,"attributes":{"menuid":"8","buttonid":"8"}},{"id":"9","text":"角色授权","checked":true,"attributes":{"menuid":"9","buttonid":"9"}},{"id":"10","text":"分配按钮","checked":true,"attributes":{"menuid":"10","buttonid":"10"}},{"id":"11","text":"全部展开","checked":true,"attributes":{"menuid":"11","buttonid":"11"}},{"id":"12","text":"全部隐藏","checked":true,"attributes":{"menuid":"12","buttonid":"12"}}]}],
+                //    //url: "ashx/bg_button.ashx?action=getAllButton&menuId=" + row[0].Id + "&timespan=" + new Date().getTime(),
+                //    onlyLeafCheck: true,
+                //    checkbox: true
+                //});
+                //var node1 = $('#tree_menu_distribute_button').tree('find', 1);
+                //alert(node1.target);
+                //$("#tree_menu_distribute_button").tree('uncheck', node1.target);
+                //$('#tree_menu_distribute_button').tree('update', {
+                //    target: node1.target
+                //});
+            },
+            onClose: function () {
+                $("#ui_button_distribute_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+
+    function initeData(iid) {
+        $.ajax({
+            url: "ashx/bg_button.ashx?action=getAllButton&timespan=" + new Date().getTime(),
+            //data: para,
+            type: "POST",
+            dataType: "json",
+            success: function (res) {
+                $('#tree_menu_distribute_button').tree({
+                    //data: [{"id":"-1","text":"所有按钮","children":[{"id":"1","text":"浏览","checked":true,"attributes":{"menuid":"1","buttonid":"1"}},{"id":"3","text":"添加","checked":true,"attributes":{"menuid":"3","buttonid":"3"}},{"id":"4","text":"修改","checked":true,"attributes":{"menuid":"4","buttonid":"4"}},{"id":"5","text":"删除","checked":true,"attributes":{"menuid":"5","buttonid":"5"}},{"id":"6","text":"导出","checked":true,"attributes":{"menuid":"6","buttonid":"6"}},{"id":"7","text":"部门设置","checked":true,"attributes":{"menuid":"7","buttonid":"7"}},{"id":"8","text":"角色设置","checked":true,"attributes":{"menuid":"8","buttonid":"8"}},{"id":"9","text":"角色授权","checked":true,"attributes":{"menuid":"9","buttonid":"9"}},{"id":"10","text":"分配按钮","checked":true,"attributes":{"menuid":"10","buttonid":"10"}},{"id":"11","text":"全部展开","checked":true,"attributes":{"menuid":"11","buttonid":"11"}},{"id":"12","text":"全部隐藏","checked":true,"attributes":{"menuid":"12","buttonid":"12"}}]}],
+                    //url: "ashx/bg_button.ashx?action=getAllButton&menuId=" + row[0].Id + "&timespan=" + new Date().getTime(),
+                    data:res,
+                    onlyLeafCheck: true,
+                    checkbox: true
+                });
+                $.ajax({
+                    url: "ashx/bg_button.ashx?action=getButtonByMenu&menuId=" + iid + "&timespan=" + new Date().getTime(),
+                    //data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (res) {
+                        for (var i = 0; i < res.length; i++) {
+                            var node = $('#tree_menu_distribute_button').tree('find', res[i].ButtonId);
+                            $("#tree_menu_distribute_button").tree('check', node.target);
+                            $('#tree_menu_distribute_button').tree('update', {
+                                target: node.target
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function doDistribute(menuId) {   //保存分配信息
+        var menuButtonId = "";
+        var nodes = $('#tree_menu_distribute_button').tree('getChecked');
+        for (var i = 0; i < nodes.length; i++) {
+            menuButtonId += nodes[i].id + ",";
+            //最终拼接示例：5 1,5 2,7 1,10 1,11 1 分别是菜单id、按钮id
+        }
+        var para = {};
+        para.action = "distribute";
+        para.timespan = new Date().getTime();
+        para.menuButtonId = menuButtonId;
+        para.menuId = menuId;
+
+        $.ajax({
+            url: "ashx/bg_menu.ashx",
+            data: para,
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    $("#ui_button_distribute_dialog").dialog('destroy');  //销毁dialog对象
+                    $.show_warning("提示", data.msg);
+                } else {
+                    $('#ui_button_distribute_dialog').linkbutton('enable');
+                    $.show_warning("提示", data.msg);
+                }
+            }
+        });
+    }
+
+    //添加菜单
+    function ui_menu_add() {
+        $("<div/>").dialog({
+            id: "ui_menu_add_dialog",
+            href: "html/ui_menu_add.html",
+            title: "添加菜单",
+            height: 350,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_menu_add_btn",
+                text: '添 加',
+                handler: function () {
+                    $("#ui_menu_menuaddform").form("submit", {
+                        url: "ashx/bg_menu.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_menu_add_btn').linkbutton('disable');    //点击就禁用按钮，防止连击
+                            param.action = 'add';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_menu_add_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_menu_add_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_menu_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_menu_add_btn').linkbutton('enable');   //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#ui_menu_menuid_add").focus();
+            },
+            onClose: function () {
+                $("#ui_menu_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //修改按钮
+    function ui_menu_edit() {
+        var row = $("#ui_menu_dg").datagrid("getChecked");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要修改的菜单或者双击某个菜单");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量修改");
+            $("#ui_menu_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_menu_edit_dialog",
+            href: "html/ui_menu_edit.html",
+            title: "修改菜单",
+            height: 350,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_menu_edit_btn",
+                text: '修 改',
+                handler: function () {
+                    $("#ui_menu_menueditform").form("submit", {
+                        url: "ashx/bg_menu.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_menu_edit_btn').linkbutton('disable');   //点击就禁用按钮，防止连击
+                            param.action = 'edit';
+                            if ($(this).form('validate')) {
+                                return true;
+                            }
+                            else {
+                                $('#ui_menu_edit_btn').linkmenu('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_menu_edit_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_menu_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_menu_edit_btn').linkmenu('enable');    //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#id").val(row[0].Id);
+                //$("#originalName").val(row[0].menuId);
+                $("#ui_menu_menuname_edit").val(row[0].Name);
+                $("#ui_menu_fathermenuname_edit").val(row[0].ParentId);
+                $("#ui_menu_codename_edit").val(row[0].Code);
+                $("#ui_menu_link_edit").val(row[0].LinkAddress);
+                $("#ui_menu_iconname_edit").val(row[0].Icon);
+                $("#ui_menu_sortname_edit").val(row[0].Sort);
+            },
+            onClose: function () {
+                $("#ui_menu_edit_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //删除菜单（可批量）
+    function ui_menu_delete() {
+        var rows = $("#ui_menu_dg").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.show_warning("提示", "请先勾选要删除的菜单");
+            return;
+        }
+        $.messager.confirm('提示', '确定删除勾选的这' + rows.length + '个菜单？', function (r) {
+            if (r) {
+                para = {};
+                para.action = "delete";
+                para.timespan = new Date().getTime();
+                para.id = "";
+                $.each(rows, function (i, row) {
+                    para.id += row.Id + ",";
+                });
+                $.ajax({
+                    url: "ashx/bg_menu.ashx",
+                    data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_menu_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        } else {
+                            $.show_warning("提示", data.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+<div id="ui_menu_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'center',border:false">
+        <table id="ui_menu_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

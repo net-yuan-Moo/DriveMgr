@@ -1,0 +1,222 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=archives&pagename=ui_archives",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_archives_dg").datagrid({       //初始化datagrid
+                            url: "StudentsMgr/bg_archivesHandler.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'ArchivesCode',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'StudentsID',
+                            sortOrder: 'desc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             { field: 'ck', checkbox: true },
+                                             {
+                                                 width: 100,
+                                                 title: '学员姓名',
+                                                 field: 'StudentsName',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 8 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }, {
+                                                 width: 180,
+                                                 title: '学员编号',
+                                                 field: 'StudentCode',
+                                                 sortable: true
+                                             }]],
+                            columns: [[
+                                       {
+                                           field: 'ArchivesCode', title: '档案编号', sortable: true, width: 180, align: 'center'
+
+                                       }, {
+                                           field: 'CardNum', title: '身份证号', sortable: true, width: 100, align: 'center'
+
+                                       }, {
+                                           field: 'Remark', title: '备注', sortable: true, width: 200, align: 'center'
+
+                                       }
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                //被编辑列高亮，其他列去除高亮
+                                $("#ui_archives_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                ui_archives_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_archives_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_archives_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_archives_searchdata();
+            }
+        })
+    });
+
+   
+    //修改档案信息
+    function ui_archives_edit() {
+        var row = $("#ui_archives_dg").datagrid("getSelections");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要修改的档案或者双击某个档案信息");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量修改");
+            $("#ui_archives_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_archives_edit_dialog",
+            href: "StudentsMgr/ui_archives_edit.html",
+            title: "修改档案信息",
+            height: 450,
+            width: 560,
+            modal: true,
+            buttons: [{
+                id: "ui_archives_edit_btn",
+                text: '修 改',
+                handler: function () {
+                    $("#ui_archives_editform").form("submit", {
+                        url: "StudentsMgr/bg_archivesHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_archives_edit_btn').linkbutton('disable');   //点击就禁用按钮，防止连击
+                            param.action = 'edit';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_archives_edit_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_archives_edit_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_archives_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_archives_edit_btn').linkbutton('enable');    //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#archivesid_edit").val(row[0].ArchivesID); //档案主键
+                $("#ui_archives_stuname_edit").text(row[0].StudentsName);
+                $("#ui_archives_stucode_edit").text(row[0].StudentCode);
+                $("#ui_archives_cardnum_edit").text(row[0].CardNum);
+               
+                $("#ui_archives_code_edit").text(row[0].ArchivesCode);
+                $("#ui_archives_remark_edit").val(row[0].Remark);
+            },
+            onClose: function () {
+                $("#ui_archives_edit_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+   
+    function ui_archives_searchdata() {
+        $("#ui_archives_dg").datagrid('load', {
+            ui_studentsArchives_name: $('#ui_archives_search').find('[name=ui_studentsArchives_name]').val(),
+            ui_studentsArchives_code: $('#ui_archives_search').find('[name=ui_studentsArchives_code]').val(),
+            ui_studentsArchives_cardnum: $('#ui_archives_search').find('[name=ui_studentsArchives_cardnum]').val(),
+            ui_studentsArchives_archivescode: $('#ui_archives_search').find('[name=ui_studentsArchives_archivescode]').val()
+        });
+        $("#ui_archives_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_archives_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_archives_cleardata() {
+        $('#ui_archives_search input').val('');
+        $('#ui_archives_search select').val('select');
+      
+        $("#ui_archives_dg").datagrid('load', {});
+
+        $("#ui_archives_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_archives_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+<div id="ui_archives_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_archives_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        学员姓名：
+                    </th>
+                    <td>
+                        <input name="ui_studentsArchives_name" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        学员编号：
+                    </th>
+                    <td>
+                        <input name="ui_studentsArchives_code" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        身份证号：
+                    </th>
+                    <td>
+                        <input name="ui_studentsArchives_cardnum" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+               <tr>
+                    <th>
+                        档案编号：
+                    </th>
+                    <td>
+                        <input name="ui_studentsArchives_archivescode" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_archives_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_archives_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_archives_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

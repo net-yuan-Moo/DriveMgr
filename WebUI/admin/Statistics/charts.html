@@ -1,0 +1,125 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Highcharts Example</title>
+    <script src="../js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#container').highcharts({
+                chart: {
+                },
+                title: {
+                    text: '入账情况统计图'
+                },
+                xAxis: {
+                    categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                },
+                yAxis: {
+                    title: {
+                        text: '总收入(万元)'
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        var s;
+                        if (this.point.name) { // the pie chart
+                            s = '' +
+                                this.point.name + ': ' + this.y + ' (万元)';
+                        } else {
+                            s = '' +
+                                this.x + ': ' + this.y;
+                        }
+                        return s;
+                    }
+                },
+                //exporting: {
+                //    enabled: true, //用来设置是否显示‘打印’,'导出'等功能按钮，不设置时默认为显示
+                //    url: "/StudentsMgr/payment1.html" //导出图片的URL，默认导出是需要连到官方网站去的哦
+                //},
+                labels: {
+                    items: [{
+                        html: '总收入情况(万元)',
+                        style: {
+                            left: '40px',
+                            top: '8px',
+                            color: 'black'
+                        }
+                    }]
+                },
+                series: [{
+                    type: 'column',
+                    name: '学员学费',
+                    data: [30000, 2, 1, 3, 4, 3, 2, 1, 3, 4, 2, 4]
+                }, {
+                    type: 'column',
+                    name: '包车费',
+                    data: [2, 3, 5, 7, 6, 3, 2, 1, 3, 4, 1, 4]
+                }, {
+                    type: 'column',
+                    name: '场地费',
+                    data: [4, 3, 3, 9, 10, 3, 2, 1, 3, 4, 7, 9]
+                },
+                {
+                    type: 'column',
+                    name: '贷款',
+                    data: [4, 3, 3, 9, 10, 3, 2, 1, 3, 4, 5, 6]
+                },
+                {
+                    type: 'column',
+                    name: '其他收入',
+                    data: [4, 3, 3, 9, 10, 3, 2, 1, 3, 4, 4, 3]
+                },
+                {
+                    type: 'spline',
+                    name: 'Average',
+                    data: [16, 12.67, 13, 16.33, 13.33, 23, 12, 11, 13, 14, 21, 22],
+                    marker: {
+                        lineWidth: 2,
+                        lineColor: Highcharts.getOptions().colors[3],
+                        fillColor: 'white'
+                    }
+                }, {
+                    type: 'pie',
+                    name: '总收入',
+                    data: [{
+                        name: '学员学费',
+                        y: 13,
+                        color: Highcharts.getOptions().colors[0] // Jane's color
+                    }, {
+                        name: '包车费',
+                        y: 23,
+                        color: Highcharts.getOptions().colors[1] // John's color
+                    }, {
+                        name: '场地费',
+                        y: 19,
+                        color: Highcharts.getOptions().colors[2] // Joe's color
+                    },
+                    {
+                        name: '贷款',
+                        y: 21,
+                        color: Highcharts.getOptions().colors[3] // John's color
+                    },
+                    {
+                        name: '其他收入',
+                        y: 25,
+                        color: Highcharts.getOptions().colors[4] // John's color
+                    }],
+                    center: [100, 80],
+                    size: 100,
+                    showInLegend: false,
+                    dataLabels: {
+                        enabled: false
+                    }
+                }]
+            });
+        });
+
+		</script>
+</head>
+<body>
+    <script src="../js/highcharts.js"></script>
+    <script src="../js/exporting.js"></script>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</body>
+</html>

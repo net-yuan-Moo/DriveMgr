@@ -1,0 +1,65 @@
+﻿<script type="text/javascript">
+    function drawExpenses(options) {
+        $('#expensescontainer').highcharts({
+            chart: {
+            },
+            title: options.title,
+            xAxis: {
+                categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+            },
+            yAxis: options.yAxis,
+            tooltip: {
+                formatter: function () {
+                    var s;
+                    if (this.point.name) { // the pie chart
+                        s = '' +
+                            this.point.name + ': ' + this.y + ' (万元)';
+                    } else {
+                        s = '' +
+                            this.x + ': ' + this.y;
+                    }
+                    return s;
+                }
+            },
+            //exporting: {
+            //    enabled: true, //用来设置是否显示‘打印’,'导出'等功能按钮，不设置时默认为显示
+            //    url: "/StudentsMgr/payment1.html" //导出图片的URL，默认导出是需要连到官方网站去的哦
+            //},
+
+            series: options.series
+        });
+    }
+    $(function () {
+        var myDate = new Date();
+        var yearStr = myDate.getFullYear();
+        var years = yearStr - 1;
+        var yearst = yearStr - 2;
+
+        var yearString = "<option>" + yearStr + "</option><option>" + years + "</option><option>" + yearst + "</option>";
+        $("#ddlExpensesYear").html(yearString);
+        getExpensesPlotData();
+
+    });
+
+    function getExpensesPlotData() {
+        $.ajax({
+            url: "Statistics/bg_ExpensesStatisticHandler.ashx",
+            type: "post",
+            data: { "action": "search", checkedYear: $("#ddlExpensesYear").val() },
+            dataType: "json",
+            success: function (data) {
+                drawExpenses(data.value);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+
+    }
+		</script>
+<div style="margin: 10px;">
+    选择年份：
+    <select id="ddlExpensesYear" onchange="getExpensesPlotData();"></select>
+</div>
+<div id="expensescontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+

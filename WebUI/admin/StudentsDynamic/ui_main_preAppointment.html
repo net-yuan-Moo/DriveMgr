@@ -1,0 +1,21 @@
+﻿
+<script type="text/javascript">
+    $(function () {
+        //监听windows大小  
+        var contentwidth = parent.$('.layout-panel-center').width()-5, // 第一次加载时center面板的宽度  
+            width = $('.gridcontainer').width(), //给grid加一个container层，并记录  
+            mwidth = contentwidth - width; //确定偏量  
+
+        var contentheight = parent.$('.layout-panel-center').height()-31, // 第一次加载时center面板的宽度  
+            height = $('.gridcontainer').height(), //给grid加一个container层，并记录  
+            mheight = contentheight - height; //确定偏量  
+        $("#subjectonetab").css("width", contentwidth.toString() + "px");
+        $("#subjectonetab").css("height", contentheight.toString() + "px");
+    });
+</script>
+<div class="easyui-tabs" id="subjectonetab" style="width: 1px; height: 1px">
+    <div  data-options="href:'StudentsDynamic/ui_preAppointment.html',closable:false,icon: 'icon-house'" title="科目一"></div>
+    <div  data-options="href:'StudentsDynamic/ui_preAppointmentTwo.html',closable:false,icon: 'icon-house'" title="科目二"></div>
+    <div  data-options="href:'StudentsDynamic/ui_preAppointmentThree.html',closable:false,icon: 'icon-house'" title="科目三"></div>
+    <div  data-options="href:'StudentsDynamic/ui_preAppointmentFour.html',closable:false,icon: 'icon-house'" title="科目四"></div>
+</div>

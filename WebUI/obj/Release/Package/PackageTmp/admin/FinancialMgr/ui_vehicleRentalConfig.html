@@ -1,0 +1,19 @@
+﻿
+<script type="text/javascript">
+    $(function () {
+        //监听windows大小  
+        var contentwidth = parent.$('.layout-panel-center').width() - 5, // 第一次加载时center面板的宽度  
+            width = $('.gridcontainer').width(), //给grid加一个container层，并记录  
+            mwidth = contentwidth - width; //确定偏量  
+
+        var contentheight = parent.$('.layout-panel-center').height() - 31, // 第一次加载时center面板的宽度  
+            height = $('.gridcontainer').height(), //给grid加一个container层，并记录  
+            mheight = contentheight - height; //确定偏量  
+        $("#vehicleRentalConfigtab").css("width", contentwidth.toString() + "px");
+        $("#vehicleRentalConfigtab").css("height", contentheight.toString() + "px");
+    });
+</script>
+<div class="easyui-tabs" id="vehicleRentalConfigtab" style="width: 1px; height: 1px">
+    <div  data-options="href:'FinancialMgr/ui_vehicleRental_local.html',closable:false,icon: 'icon-house'" title="本校学员车辆租用"></div>
+    <div  data-options="href:'FinancialMgr/ui_vehicleRental.html',closable:false,icon: 'icon-house'" title="外校学员车辆租用"></div>
+</div>

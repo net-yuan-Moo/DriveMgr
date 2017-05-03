@@ -1,0 +1,5 @@
+F:\源码\DriveMgr\Model\bin\Release\DriveMgr.Model.dll
+F:\源码\DriveMgr\Model\bin\Release\DriveMgr.Model.pdb
+F:\源码\DriveMgr\Model\obj\Release\Model.csprojResolveAssemblyReference.cache
+F:\源码\DriveMgr\Model\obj\Release\DriveMgr.Model.dll
+F:\源码\DriveMgr\Model\obj\Release\DriveMgr.Model.pdb

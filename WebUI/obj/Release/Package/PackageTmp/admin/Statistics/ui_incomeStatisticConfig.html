@@ -1,0 +1,19 @@
+﻿
+<script type="text/javascript">
+    $(function () {
+        //监听windows大小  
+        var contentwidth = parent.$('.layout-panel-center').width() - 5, // 第一次加载时center面板的宽度  
+            width = $('.gridcontainer').width(), //给grid加一个container层，并记录  
+            mwidth = contentwidth - width; //确定偏量  
+
+        var contentheight = parent.$('.layout-panel-center').height() - 31, // 第一次加载时center面板的宽度  
+            height = $('.gridcontainer').height(), //给grid加一个container层，并记录  
+            mheight = contentheight - height; //确定偏量  
+        $("#incomeStatisticConfigtab").css("width", contentwidth.toString() + "px");
+        $("#incomeStatisticConfigtab").css("height", contentheight.toString() + "px");
+    });
+</script>
+<div class="easyui-tabs" id="incomeStatisticConfigtab" style="width: 1px; height: 1px">
+    <div  data-options="href:'Statistics/ui_IncomeStatistic_table.html',closable:false,icon: 'icon-house'" title="表格视图"></div>
+    <div  data-options="href:'Statistics/ui_IncomeStatistic.html',closable:false,icon: 'icon-house'" title="图表视图"></div>
+</div>

@@ -1,0 +1,33 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_registration_payExamform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input type="hidden" name="payExam_id" id="payExam_id" />
+                    
+                    <span id="ui_registration_name_payExam" ></span>
+                </td>
+            </tr>
+         
+            <tr>
+                <th>交考试费金额:
+                </th>
+                <td>
+                    <input name="ui_registration_realpay_payExam" style="width: 100px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'currency'"
+                        autocomplete="off">
+                </td>
+            </tr>
+            
+            <tr>
+                <th>备注：
+                </th>
+                <td>
+                    <textarea rows="3" cols="30" name="ui_registration_remark_payExam"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

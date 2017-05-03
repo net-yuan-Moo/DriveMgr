@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SmartOfLife驾校管理系统-登录页</title>
+    <script src="js/jquery.min.js"></script>
+    <link href="css/register.css" rel="stylesheet" />
+</head>
+<body>
+    <div class='signup_container'>
+        <h1 class='signup_title'>用户登陆</h1>
+        <img src='images/login/people.png' id='admin' />
+        <div id="signup_forms" class="signup_forms clearfix">
+            <form class="signup_form_form" id="loginFrm" method="post" action="" data-secure-action="https://www.tumblr.com/login" data-secure-ajax-action="">
+                <div class="form_row first_row">
+                    <label for="signup_email">请输入用户名</label><div class='tip ok'></div>
+                    <input type="text" name="user[email]" placeholder="请输入用户名" id="loginName" data-required="required">
+                </div>
+                <div class="form_row">
+                    <label for="signup_password">请输入密码</label><div class='tip error'></div>
+                    <input type="password" name="user[password]" placeholder="请输入密码" id="loginPwd" data-required="required">
+                </div>
+                <div class="form_row">
+                   <!-- <input type="text" name="user[password]" placeholder="" id="signup_select" value='' data-required="required">
+                    <img src='images/login/d.png' id='d' />
+                    <ul>
+                        <li>管理员</li>
+                        <li>用户1</li>
+                        <li>用户2</li>
+                    </ul>-->
+                     <select name="remember" style="width:100%;height:40px;background: url('../images/login/i2.png') no-repeat scroll 9px 15px transparent;font: bold 14px/25px "microsoft yahei";">
+                        <option value="notremember">不记住</option>
+                        <option value="oneday">一天</option>
+                        <option value="sevenday" selected="selected">七天</option>
+                        <option value="onemouth">一个月</option>
+                        <option value="oneyear">一年</option>
+                    </select>
+                    <span id="msg" style="color: Red"></span>
+                </div>
+            </form>
+        </div>
+
+        <div class="login-btn-set">
+            <!--<div class='rem'>记住我</div>-->
+            <a href='javascript:void(0)' class='login-btn' id="loginBtn" onclick="tmd();"></a>
+        </div>
+        <p class='copyright'>版权所有 smartoflife</p>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var city;     //访问者所在城市
+    function tmd() {
+        $("#loginFrm").submit();
+    }
+    //$(function () {
+        //$("#loginDialog").dialog({
+        //    title: "系统登录",
+        //    closable: false,
+        //    modal: true,
+        //    width: 400,
+        //    height: 280,
+        //    buttons: [{
+        //        id: "loginBtn",
+        //        text: "登 录",
+        //        //iconCls: "icon-ok",
+        //        handler: function () {
+        //            if ($("#loginFrm").form('validate')) {
+        //                $("#loginFrm").submit();
+        //            }
+        //        }
+        //    }]
+        //});
+
+        
+
+        //调用百度api获取用户所在城市（参数ak失效，需向百度申请）
+        //$.ajax({
+        //    url: "http://api.map.baidu.com/location/ip?ak=F454f8a5efe5e577997931cc01de3974&callback=?",
+        //    type: "post",
+        //    dataType: "json",
+        //    timeout: 2000,    //2s请求不到百度的api就停止发送请求
+        //    success: function (result) {
+        //        try {
+        //            city = result.content.address;
+        //        } catch (e) {
+        //            city = "未知";
+        //            getiflogin();
+        //        }
+        //    },
+        //    error: function (data, textStatus, jqXHR) {
+        //        city = "未知";
+        //        getiflogin();
+        //    }
+        //});
+
+        //调用新浪api获取用户所在城市（断网时不触发getiflogin函数）
+        //            $.getScript('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', function () {
+        //                //console.log(remote_ip_info);
+        //                try {
+        //                    city = remote_ip_info.city == remote_ip_info.province ? remote_ip_info.province : remote_ip_info.province + remote_ip_info.city;
+        //                    getiflogin();
+        //                } catch (e) {
+        //                    city = "未知";
+        //                    getiflogin();
+        //                }
+        //            });
+
+        //调用新浪api获取用户所在城市
+        $.ajax({
+            url: "http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js",
+            type: "get",
+            dataType: "script",
+            timeout: 2000,    //2s请求不到新浪的api就停止发送请求，进入error回调函数
+            success: function (result) {
+                try {
+                    city = remote_ip_info.city == remote_ip_info.province ? remote_ip_info.province : remote_ip_info.province + remote_ip_info.city;
+                    getiflogin();
+                } catch (e) {
+                    city = "未知";
+                    getiflogin();
+                }
+            },
+            error: function (data, textStatus, jqXHR) {
+                city = "未知";
+                getiflogin();
+            }
+        });
+
+        var url = location.href;
+        //登录
+        $("#loginFrm").form({
+            url: 'ashx/bg_user_login.ashx',
+            onSubmit: function (param) {
+                param.action = "login";
+                param.city = city;    //访问者所在城市
+                return checkInput();   //验证码是否正确
+            },
+            success: function (data) {
+                var result = eval('(' + data + ')');  //字符串转json
+                if (result.success) {
+                    if (url.indexOf("ReturnUrl=") != -1) {
+                        window.location.href = decodeURIComponent(url.substring(url.indexOf("ReturnUrl=") + 10));
+                    }
+                    else {
+                        window.location.href = "index.html";
+                    }
+                } else {
+                    $.show_warning("提示", result.msg);
+                    $('#loginBtn').linkbutton('enable');
+                    createCode();   //刷新验证码
+                    $("#loginVerificationCode").val("");
+                }
+            }
+        })
+
+        //回车提交表单
+        $("#loginFrm").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                //登录按钮如果处于禁用状态，那么回车也不提交表单
+                if (!($('#loginBtn').linkbutton("options").disabled) && $("#loginFrm").form('validate')) {
+                    $("#loginFrm").submit();
+                }
+            }
+        })
+        //createCode();  //创建验证码
+    })
+
+    function getiflogin() {
+        $.ajax({
+            url: "ashx/bg_user_login.ashx",
+            type: "post",
+            dataType: "json",
+            data: "action=iflogin&city=" + city,
+            success: function (result) {
+                if (result.success) {
+                    window.location.href = "index.html";
+                }
+            },
+            beforeSend: function () {
+                $('#loginBtn').linkbutton('disable');   //点击登陆后先禁用登录按钮，防止连击
+            },
+            complete: function () {
+                $('#loginBtn').linkbutton('enable');
+            }
+        });
+    }
+    </script>
+   
+</html>

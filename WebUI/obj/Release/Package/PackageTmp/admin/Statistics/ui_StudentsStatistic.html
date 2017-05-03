@@ -1,0 +1,118 @@
+﻿<script type="text/javascript">
+    function drawStudentsInfo(options) {
+        var periodName = $("#ddlStuStatisticPeriod option:selected").text();
+        //var plotData = '[';
+        //for (var i = 0; i < options.length; i++) {
+        //    plotData += "['" + options[i].cteName + "'," + options[i].stuCount+"],";
+        //}
+        //plotData = plotData.substring(0,plotData.length-1) + "]";
+        //alert(plotData);
+        
+        //[
+        //            ['在学', 45],
+        //            ['退学', 26],
+        //            {
+        //                name: '毕业',
+        //                y: 12,
+        //                sliced: true,
+        //                selected: true
+        //            }
+        //]
+
+        $('#studentscontainer').highcharts({
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45,
+                    beta: 0
+                }
+            },
+            title: {
+                text: "第"+periodName+"期学员毕业情况统计图"
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.y}/{point.total}={point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    }
+                }
+            },
+            series:
+                //[{ "name": "在学", "sliced": false, "y": 8, "selected": false }, { "name": "毕业", "sliced": false, "y": 1, "selected": false }, { "name": "退学", "sliced": false, "y": 1, "selected": false }]
+                [{
+                type: 'pie',
+                name: '比例',
+                data: [
+                    ['在学', options[2].stuCount],
+                    ['退学', options[1].stuCount],
+                    {
+                        name: '毕业',
+                        y: options[0].stuCount,
+                        sliced: true,
+                        selected: true
+                    }
+        ]
+            }]
+        });
+    }
+
+    $(function () {
+        getStudentsInfoPlotData();
+    });
+
+    //画图
+    function getStudentsInfoPlotData() {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "StudentsMgr/bg_registrationHandler.ashx",
+            type: "post",
+            data: { "action": "bindPeroid" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                var peroidstr = "";
+                for (var i = 0; i < data.length; i++) {
+                    peroidstr += "<option value='" + data[i].ID + "'>" + data[i].PeriodCode + "</option>";
+                }
+                $("#ddlStuStatisticPeriod").html(peroidstr);
+                changeStudentsPeroid();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+    }
+
+    function changeStudentsPeroid() {
+        $.ajax({
+            url: "Statistics/bg_StudentsStatisticHandler.ashx",
+            type: "post",
+            data: { "action": "search", checkedPeriod: $("#ddlStuStatisticPeriod").val()  },
+            dataType: "json",
+            success: function (data) {
+                drawStudentsInfo(data);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+		</script>
+<div style="margin: 10px; margin-left:100px; margin-top: 30px;">
+    选择期数：
+    <select id="ddlStuStatisticPeriod" onchange="changeStudentsPeroid();"></select>
+</div>
+<div id="studentscontainer" style="min-width: 310px; height: 400px; margin: 0 auto;"></div>
+

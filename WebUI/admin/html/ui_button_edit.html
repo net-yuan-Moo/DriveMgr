@@ -1,0 +1,53 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_button_buttoneditform" method="post" action="">
+    <table class="tableForm" width="100%">
+        <tr>
+            <th>
+                按钮名称：
+            </th>
+            <td>
+                <input type="hidden" name="id" id="id" />
+                <input type="hidden" name="originalName" id="originalName" />
+                <input type="text" name="ui_button_buttonname_edit" id="ui_button_buttonname_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                标识码：
+            </th>
+            <td>
+                <input type="text" name="ui_button_codename_edit" id="ui_button_codename_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                图标：
+            </th>
+            <td>
+                <input type="text" name="ui_button_iconname_edit" id="ui_button_iconname_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                排序：
+            </th>
+            <td>
+
+               <input id="ui_button_sortnname_edit" name="ui_button_sortnname_edit" class="easyui-numberspinner"
+                    style="width: 70px;" data-options="required:true,min:1,max:100,editable:false">
+            </td>
+        </tr>
+        <tr>
+            <th>
+                描述：
+            </th>
+            <td>
+                <textarea rows="3" cols="30" name="ui_button_description_edit" id="ui_button_description_edit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

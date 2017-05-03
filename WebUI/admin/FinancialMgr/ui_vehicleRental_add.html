@@ -1,0 +1,95 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_vehicleRental_vehicleRentaladdform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                学员：
+            </th>
+            <td>
+               <!-- <input id="ui_vehicleRental_StudentName_add" class="easyui-combobox" name="ui_vehicleRental_StudentName_add"   
+                    data-options="required:true,valueField:'StudentsName',textField:'StudentsName',url:'FinancialMgr/bg_vehicleRentalHandler.ashx?action=getStudentDT'" /> -->
+
+                <input type="text" name="ui_vehicleRental_StudentName_add" id="ui_vehicleRental_StudentName_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>   
+        <!--<tr>
+            <th>
+                教练：
+            </th>
+            <td>
+                <input id="ui_vehicleRental_CoachName_add" class="easyui-combobox" name="ui_vehicleRental_CoachName_add"   
+                    data-options="valueField:'CoachName',textField:'CoachName',url:'FinancialMgr/bg_vehicleRentalHandler.ashx?action=getCoachDT'" /> 
+            </td>
+        </tr>  -->
+        <tr>
+            <th>
+               出租时间:
+            </th>
+            <td>
+                <input name="ui_vehicleRental_RentDate_add" id="ui_vehicleRental_RentDate_add" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>  
+        <tr>
+            <th>
+                车牌号：
+            </th>            
+            <td>
+                <input id="ui_vehicleRental_LicencePlateNum_add" class="easyui-combobox" name="ui_vehicleRental_LicencePlateNum_add"   
+                    data-options="required:true,valueField:'Id',textField:'LicencePlateNum',url:'FinancialMgr/bg_vehicleHandler.ashx?action=getVehicleDT'" /> 
+            </td>
+        </tr> 
+        <tr>
+                    <th>
+                        计价类型：
+                    </th>
+                    <td>
+                        <input id="ui_vehicleRental_PriceConfig_add" class="easyui-combobox" name="ui_vehicleRental_PriceConfig_add"   
+                    data-options="required:true,valueField:'Id',textField:'PriceTypeName',url:'FinancialMgr/bg_vehicleRentalHandler.ashx?action=getPriceConfigDT'" /> 
+                    </td>
+                </tr>
+        <tr>
+            <th>
+                时长：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicleRental_Longer_add" id="ui_vehicleRental_Longer_add" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2,
+                    onChange: function(){   
+            
+                    var priceConfigID=$('#ui_vehicleRental_PriceConfig_add').combobox('getValue');
+                    var longer=$('#ui_vehicleRental_Longer_add').numberbox('getValue');
+                    $.ajax({
+            type: 'POST',
+            url: 'FinancialMgr/bg_vehicleRentalHandler.ashx',
+            data: { action: 'setTotalPrice',priceConfigID:priceConfigID,longer:longer },
+            success: function (data) {             
+                    $('#ui_vehicleRental_TotalPrice_add').numberbox('setValue',data.totalPrice);
+            }
+        })
+
+        }"
+                     autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                总价：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicleRental_TotalPrice_add" id="ui_vehicleRental_TotalPrice_add" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="8" cols="60" name="ui_vehicleRental_Remark_add" id="ui_vehicleRental_Remark_add"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

@@ -1,0 +1,101 @@
+﻿<head>
+    <style type="text/css">
+        .tableForm {
+            width: 88%;
+        }
+        table tr th {
+            width:80px;
+        }
+    </style>
+</head>
+<div style="padding: 15px; overflow: hidden">
+    <form id="ui_registration_byCardform" method="post" action="">
+        <table class="tableForm">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <span name="ui_registration_name_byCard" id="ui_registration_name_byCard"></span>
+                   <!-- <input type="text" name="ui_registration_name_byCard" id="ui_registration_name_byCard" class="easyui-validatebox"
+                        data-options="required:true" autocomplete="off" />-->
+                </td>
+                <th>
+
+                </th>
+                <td rowspan="6">
+                    <img style="width:100px; height:100px;" id="imgStu" alt="暂无图片" src="" />
+                </td>
+            </tr>
+            <tr>
+                <th>身份证号：
+                </th>
+                <td>
+                    <span name="ui_registration_cardnum_byCard" id="ui_registration_cardnum_byCard"></span>
+                    <!--<input type="text" name="ui_registration_cardnum_byCard" id="ui_registration_cardnum_byCard" class="easyui-validatebox" data-options="required:true"
+                        autocomplete="off" />-->
+                </td>
+            </tr>
+            <tr>
+                <th>年龄:
+                </th>
+                <td>
+                    <span name="ui_registration_age_byCard" id="ui_registration_age_byCard"></span>
+                    <!--<input name="ui_registration_age_byCard" id="ui_registration_age_byCard" class="easyui-numberspinner" style="width: 70px;"
+                        value="20" data-options="min:1,max:100,editable:true">-->
+                </td>
+            </tr>
+            <tr>
+                <th>性别：
+                </th>
+                <td>
+                    <span name="ui_registration_sex_byCard" id="ui_registration_sex_byCard"></span>
+                    <!--<select name="ui_registration_sex_byCard" id="ui_registration_sex_byCard">
+                        <option value="1">男</option>
+                        <option value="0">女</option>
+                    </select>-->
+                </td>
+            </tr>
+            <tr>
+                <th>是否本地：
+                </th>
+                <td>
+                    <select style="width:80px;" name="ui_registration_islocal_byCard" id="ui_registration_islocal_byCard" >
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>手机号码:
+                </th>
+                <td>
+                    <input name="ui_registration_phoneNum_byCard" id="ui_registration_phoneNum_byCard" style="width: 200px;"
+                        class="easyui-validatebox" data-options="validType:'mobile'"
+                        autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <th>期数：
+                </th>
+                <td>
+                    <select disabled="disabled" name="ui_registration_period_byCard" id="ui_registration_period_byCard" class="easyui-validatebox" data-options="required:true">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>家庭住址：
+                </th>
+                <td colspan="3">
+                    <textarea disabled="disabled" rows="3" cols="60" name="ui_registration_address_byCard" id="ui_registration_address_byCard"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>备注：
+                </th>
+                <td colspan="3">
+                    <textarea rows="3" cols="60" name="ui_registration_remark_byCard" id="ui_registration_remark_byCard"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

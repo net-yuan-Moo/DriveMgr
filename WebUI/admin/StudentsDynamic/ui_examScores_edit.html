@@ -1,0 +1,104 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_examScores_editform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input type="hidden" name="examScoresid_edit" id="examScoresid_edit" />
+                    <span id="ui_examScores_name_edit"></span>
+                   
+                </td>
+                 <th>学员编号：
+                </th>
+                <td>
+                    <span id="ui_examScores_code_edit"></span>
+
+                </td>
+            </tr>
+            <tr>
+                <th>科目一成绩:
+                </th>
+                <td>
+                    <input name="ui_examScores_oneScore_edit" id="ui_examScores_oneScore_edit" style="width: 70px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'score'"
+                        autocomplete="off">
+                </td>
+                <th>科目一状态：
+                </th>
+                <td>
+                    <select name="ui_examScores_oneStatus_edit" id="ui_examScores_oneStatus_edit">
+                        <option value="0">未考试</option>
+                        <option value="1">考试未通过</option>
+                        <option value="2">考试已通过</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>科目二成绩:
+                </th>
+                <td>
+                    <input name="ui_examScores_twoScore_edit" id="ui_examScores_twoScore_edit" style="width: 70px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'score'"
+                        autocomplete="off">
+                </td>
+                 <th>科目二状态：
+                </th>
+                <td>
+                    <select name="ui_examScores_twoStatus_edit" id="ui_examScores_twoStatus_edit">
+                        <option value="0">未考试</option>
+                        <option value="1">考试未通过</option>
+                        <option value="2">考试已通过</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>科目三成绩:
+                </th>
+                <td>
+                    <input name="ui_examScores_threeScore_edit" id="ui_examScores_threeScore_edit" style="width: 70px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'score'"
+                        autocomplete="off">
+                </td>
+                <th>科目三状态：
+                </th>
+                <td>
+                    <select name="ui_examScores_threeStatus_edit" id="ui_examScores_threeStatus_edit">
+                        <option value="0">未考试</option>
+                        <option value="1">考试未通过</option>
+                        <option value="2">考试已通过</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>科目四成绩:
+                </th>
+                <td>
+                    <input name="ui_examScores_fourScore_edit" id="ui_examScores_fourScore_edit"style="width: 70px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'score'"
+                        autocomplete="off">
+                </td>
+                <th>科目四状态：
+                </th>
+                <td>
+                    <select name="ui_examScores_fourStatus_edit" id="ui_examScores_fourStatus_edit">
+                        <option value="0">未考试</option>
+                        <option value="1">考试未通过</option>
+                        <option value="2">考试已通过</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>备注:
+                </th>
+                <td colspan="3">
+                    <textarea  rows="5" cols="60" name="ui_examScores_remark_edit" id="ui_examScores_remark_edit"></textarea>
+                </td>
+                
+            </tr>
+        </table>
+    </form>
+</div>

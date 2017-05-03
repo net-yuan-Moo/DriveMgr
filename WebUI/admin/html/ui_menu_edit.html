@@ -1,0 +1,49 @@
+﻿<div style="pediting: 15px; overflow: hidden">
+    <form id="ui_menu_menueditform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>菜单名称：
+                </th>
+                <td>
+                    <input type="hidden" name="id" id="id" />
+                    <input type="text" name="ui_menu_menuname_edit" id="ui_menu_menuname_edit" class="easyui-validatebox"
+                        data-options="required:true" autocomplete="off" />
+                </td>
+            </tr>
+            
+            <tr>
+                <th>标识码：
+                </th>
+                <td>
+                    <input type="text" name="ui_menu_codename_edit" id="ui_menu_codename_edit" class="easyui-validatebox" 
+                        autocomplete="off" />
+                </td>
+            </tr>
+            <tr>
+                <th>链接地址：
+                </th>
+                <td>
+                    <input type="text" name="ui_menu_link_edit" id="ui_menu_link_edit" class="easyui-validatebox"
+                        autocomplete="off" />
+                </td>
+            </tr>
+            <tr>
+                <th>图标：
+                </th>
+                <td>
+                    <input type="text" name="ui_menu_iconname_edit" id="ui_menu_iconname_edit" class="easyui-validatebox" 
+                        autocomplete="off" />
+                </td>
+            </tr>
+            <tr>
+                <th>排序：
+                </th>
+                <td>
+
+                    <input id="ui_menu_sortname_edit" name="ui_menu_sortname_edit" class="easyui-numberspinner"
+                        style="width: 70px;" data-options="required:true,min:1,max:100,editable:false">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

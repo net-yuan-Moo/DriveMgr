@@ -1,0 +1,50 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_loan_loanaddform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                银行：
+            </th>
+            <td>
+                <input type="text" name="ui_loan_Bank_add" id="ui_loan_Bank_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                贷款人：
+            </th>
+            <td>
+                <input type="text" name="ui_loan_Lenders_add" id="ui_loan_Lenders_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+               贷款时间:
+            </th>
+            <td>
+                <input name="ui_loan_LoanDate_add" id="ui_loan_LoanDate_add" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>
+        <tr>
+            <th>
+                金额：
+            </th>
+            <td>
+                <input type="text" name="ui_loan_LoanAmount_add" id="ui_loan_LoanAmount_add" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>   
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="8" cols="50" name="ui_loan_Remark_add" id="ui_loan_Remark_add"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

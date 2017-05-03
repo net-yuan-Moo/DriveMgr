@@ -1,0 +1,52 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_repayment_repaymenteditform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                银行：
+            </th>
+            <td>
+                <input type="hidden" name="id" id="id" />
+                <input type="text" name="ui_repayment_Bank_edit" id="ui_repayment_Bank_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                还款人：
+            </th>
+            <td>
+                <input type="text" name="ui_repayment_RepaymentPerson_edit" id="ui_repayment_RepaymentPerson_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+               还款时间:
+            </th>
+            <td>
+                <input name="ui_repayment_RepaymentDate_edit" id="ui_repayment_RepaymentDate_edit" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>
+        <tr>
+            <th>
+                金额：
+            </th>
+            <td>
+                <input type="text" name="ui_repayment_RepaymentAmount_edit" id="ui_repayment_RepaymentAmount_edit" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>   
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="4" cols="50" name="ui_repayment_Remark_edit" id="ui_repayment_Remark_edit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+

@@ -1,0 +1,86 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_siteRental_siteRentaleditform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                出租对象：
+            </th>
+            <td>
+                <input type="hidden" name="payeditid" id="payeditid" />
+                <input type="text" name="ui_siteRental_RentObject_payedit" id="ui_siteRental_RentObject_payedit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>   
+        <tr>
+            <th>
+               出租时间:
+            </th>
+            <td>
+                <input name="ui_siteRental_RentDate_payedit" id="ui_siteRental_RentDate_payedit" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>  
+        <tr>
+            <th>
+                车牌号：
+            </th>            
+            <td>
+                <input id="ui_siteRental_LicencePlateNum_payedit" class="easyui-combobox" name="ui_siteRental_LicencePlateNum_payedit"   
+                    data-options="valueField:'Id',textField:'LicencePlateNum',url:'FinancialMgr/bg_vehicleHandler.ashx?action=getVehicleDT'" /> 
+            </td>
+        </tr> 
+        <tr>
+                    <th>
+                        计价类型：
+                    </th>
+                    <td>
+                        <input id="ui_siteRental_PriceConfig_payedit" class="easyui-combobox" name="ui_siteRental_PriceConfig_payedit"   
+                    data-options="required:true,valueField:'Id',textField:'PriceTypeName',url:'FinancialMgr/bg_siteRental_payHandler.ashx?action=getPriceConfigDT'" /> 
+                    </td>
+                </tr>
+        <tr>
+            <th>
+                时长：
+            </th>
+            <td>
+                <input type="text" name="ui_siteRental_Longer_payedit" id="ui_siteRental_Longer_payedit" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2,
+                    
+                    onChange: function(){   
+            
+                    var priceConfigID=$('#ui_siteRental_PriceConfig_payedit').combobox('getValue');
+                    var longer=$('#ui_siteRental_Longer_payedit').numberbox('getValue');
+                    $.ajax({
+            type: 'POST',
+            url: 'FinancialMgr/bg_siteRental_payHandler.ashx',
+            data: { action: 'setTotalPrice',priceConfigID:priceConfigID,longer:longer },
+            success: function (data) {             
+                    $('#ui_siteRental_TotalPrice_payedit').numberbox('setValue',data.totalPrice);
+            }
+        })
+
+        }"
+                    
+                     autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                总价：
+            </th>
+            <td>
+                <input type="text" name="ui_siteRental_TotalPrice_payedit" id="ui_siteRental_TotalPrice_payedit" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="10" cols="60" name="ui_siteRental_Remark_payedit" id="ui_siteRental_Remark_payedit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

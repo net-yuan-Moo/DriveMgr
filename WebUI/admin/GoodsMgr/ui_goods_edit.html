@@ -1,0 +1,69 @@
+﻿<div style="pediting: 15px; overflow: hidden">
+    <form id="ui_goods_goodseditform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                物品名称：
+            </th>
+            <td>
+                <input type="hidden" name="id" id="id" />
+                <input type="text" name="ui_goods_GoodsName_edit" id="ui_goods_GoodsName_edit" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                物质类别：
+            </th>            
+            <td>
+                <input id="ui_goods_GoodsCategory_edit" class="easyui-combobox" name="ui_goods_GoodsCategory_edit"   
+                    data-options="required:true,valueField:'Id',textField:'CategoryName',url:'GoodsMgr/bg_goodsHandler.ashx?action=getGoodsCategoryDT'" /> 
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                最小数量：
+            </th>
+            <td>
+                <input type="text" name="ui_goods_MinQuantity_edit" id="ui_goods_MinQuantity_edit" value="0" class="easyui-numberbox"
+                    data-options="required:true,min:0" autocomplete="off" />
+            </td>
+        </tr>  
+        <tr>
+            <th>
+                最大数量：
+            </th>
+            <td>
+                <input type="text" name="ui_goods_MaxQuantity_edit" id="ui_goods_MaxQuantity_edit" value="0" class="easyui-numberbox"
+                    data-options="required:true,min:0" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                实际数量：
+            </th>
+            <td>
+                <input type="text" name="ui_goods_RealQuantity_edit" id="ui_goods_RealQuantity_edit" value="0" class="easyui-numberbox"
+                    data-options="required:true,min:0" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                规格：
+            </th>
+            <td>
+                <input type="text" name="ui_goods_Specification_edit" id="ui_goods_Specification_edit" class="easyui-validatebox"
+                     autocomplete="off" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="2" cols="30" name="ui_goods_Remark_edit" id="ui_goods_Remark_edit"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

@@ -1,0 +1,73 @@
+﻿
+    <script type="text/javascript">
+        function drawCoachTeach(options) {
+            $('#coachcontainer').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: options.title,
+                xAxis: options.xAxis,
+                yAxis: options.yAxis,
+                tooltip: {
+                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+                    shared: true
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'percent'
+                    }
+                },
+                series: options.series
+            });
+        }
+        $(function () {
+            getCoachTeachPlotData(); //画图
+        });
+
+        //画图
+        function getCoachTeachPlotData() {
+            $.ajax({     //请求当前用户可以操作的按钮
+                url: "StudentsMgr/bg_registrationHandler.ashx",
+                type: "post",
+                data: { "action": "bindPeroid" },
+                dataType: "json",
+                timeout: 5000,
+                success: function (data) {
+                    var peroidstr = "";
+                    for (var i = 0; i < data.length; i++) {
+                        peroidstr += "<option value='" + data[i].ID + "'>" + data[i].PeriodCode + "</option>";
+                    }
+                    $("#ddlCoachTeachStatisticPeriod").html(peroidstr);
+                    changePeroid();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (textStatus == "timeout") {
+                        $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                    }
+                    else {
+                        $.show_warning("错误", textStatus + "：" + errorThrown);
+                    }
+                }
+            })
+        }
+
+        function changePeroid() {
+            $.ajax({
+                url: "Statistics/bg_CoachTeachStatisticHandler.ashx",
+                type: "post",
+                data: { "action": "search", checkedPeriod: $("#ddlCoachTeachStatisticPeriod").val(), peridName: $("#ddlCoachTeachStatisticPeriod option:selected").text() },
+                dataType: "json",
+                success: function (data) {
+                    drawCoachTeach(data.value);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+		</script>
+<div style="margin: 10px; margin-left:100px; margin-top: 30px;">
+    选择期数：
+    <select id="ddlCoachTeachStatisticPeriod" onchange="changePeroid();"></select>
+</div>
+    <div id="coachcontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

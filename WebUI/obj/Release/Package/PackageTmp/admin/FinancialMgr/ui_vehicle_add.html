@@ -1,0 +1,79 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_vehicle_vehicleaddform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                车牌号：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicle_LicencePlateNum_add" id="ui_vehicle_LicencePlateNum_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                状态：
+            </th>
+            <td>
+                <select id="ui_vehicle_Status_add" class="easyui-combobox" name="ui_vehicle_Status_add" data-options="required:true" style="width:100px;">   
+                    <option value="0">启用</option>  
+                    <option value="1">未启用</option> 
+                </select>
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                车主：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicle_Owner_add" id="ui_vehicle_Owner_add" class="easyui-validatebox"
+                     autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                品牌：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicle_Brands_add" id="ui_vehicle_Brands_add" class="easyui-validatebox"
+                     autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                型号：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicle_CarModel_add" id="ui_vehicle_CarModel_add" class="easyui-validatebox"
+                    autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+               购买时间:
+            </th>
+            <td>
+                <input name="ui_vehicle_BuyDate_add" id="ui_vehicle_BuyDate_add" class="easyui-datebox"
+                      editable="false" autocomplete="off" />
+            </td>
+         </tr>
+        <tr>
+            <th>
+                购买价钱：
+            </th>
+            <td>
+                <input type="text" name="ui_vehicle_BuyPrice_add" id="ui_vehicle_BuyPrice_add" class="easyui-numberbox"
+                    data-options="min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="4" cols="50" name="ui_vehicle_Remark_add" id="ui_vehicle_Remark_add"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

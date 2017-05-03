@@ -1,0 +1,42 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_registration_exitform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input type="hidden" name="exit_id" id="exit_id" />
+                    <input type="hidden" name="exit_realPay" id="exit_realPay" />
+                    <input type="hidden" name="exit_remark" id="exit_remark" />
+                    
+                    <span id="ui_registration_name_exit" ></span>
+                </td>
+            </tr>
+            <tr>
+                <th>实际交费金额：
+                </th>
+                <td>
+                    <span id="ui_registration_realpay_exit" ></span>
+                </td>
+            </tr>
+            <tr>
+                <th>退费金额:
+                </th>
+                <td>
+                    <input name="ui_registration_exitpay_exit" style="width: 100px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'currency'"
+                        autocomplete="off">
+                </td>
+            </tr>
+            
+            <tr>
+                <th>备注：
+                </th>
+                <td>
+                    <textarea rows="3" cols="30" name="ui_registration_remark_exit"></textarea>
+                </td>
+            </tr>
+            
+        </table>
+    </form>
+</div>

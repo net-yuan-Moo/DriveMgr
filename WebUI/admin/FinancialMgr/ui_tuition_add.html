@@ -1,0 +1,34 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_tuition_tuitionaddform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                类型：
+            </th>
+            <td>
+                <select id="ui_tuition_LocalType_add" class="easyui-combobox" name="ui_tuition_LocalType_add" data-options="required:true" style="width:100px;">   
+                    <option value="0">本地</option>  
+                    <option value="1">异地</option> 
+                </select>
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                学费：
+            </th>
+            <td>
+                <input type="text" name="ui_tuition_Costs_add" id="ui_tuition_Costs_add" class="easyui-numberbox"
+                   data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="9" cols="50" name="ui_tuition_Remark_add" id="ui_tuition_Remark_add"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

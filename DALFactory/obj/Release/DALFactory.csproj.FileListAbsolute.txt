@@ -1,0 +1,10 @@
+F:\源码\DriveMgr\DALFactory\bin\Release\DriveMgr.DALFactory.dll
+F:\源码\DriveMgr\DALFactory\bin\Release\DriveMgr.DALFactory.pdb
+F:\源码\DriveMgr\DALFactory\bin\Release\DriveMgr.IDAL.dll
+F:\源码\DriveMgr\DALFactory\bin\Release\log4net.dll
+F:\源码\DriveMgr\DALFactory\bin\Release\DriveMgr.Model.dll
+F:\源码\DriveMgr\DALFactory\bin\Release\DriveMgr.IDAL.pdb
+F:\源码\DriveMgr\DALFactory\bin\Release\DriveMgr.Model.pdb
+F:\源码\DriveMgr\DALFactory\obj\Release\DALFactory.csprojResolveAssemblyReference.cache
+F:\源码\DriveMgr\DALFactory\obj\Release\DriveMgr.DALFactory.dll
+F:\源码\DriveMgr\DALFactory\obj\Release\DriveMgr.DALFactory.pdb

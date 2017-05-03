@@ -1,0 +1,307 @@
+﻿
+<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前入库明细可以操作的按钮            
+            url: "ashx/bg_button.ashx?menucode=enterStoreHouseDetails&pagename=ui_enterStoreHouseDetails",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限                        
+                        $("#ui_enterStoreHouseDetails_dg").datagrid({       //初始化datagrid
+                            url: "GoodsMgr/bg_enterStoreHouseDetailsHandler.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'Id',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'id',
+                            sortOrder: 'desc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             {
+                                                 width: 150,
+                                                 title: '入库明细编号',
+                                                 field: 'EnterDetailsSN',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }]],
+                            columns: [[
+                                       { field: 'EnterSN', title: '入库单', sortable: true, width: 150 },
+                                       {
+                                           field: 'GoodsName', title: '物品名', sortable: true, width: 100, align: 'center',
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'CategoryName', title: '类别', sortable: true, width: 100,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'EnterQuantity', title: '数量', sortable: true, width: 50,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       }                                       
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前入库明细可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                //被编辑列高亮，其他列去除高亮
+                                $("#ui_enterStoreHouseDetails_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                ui_enterStoreHouseDetails_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_enterStoreHouseDetails_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_enterStoreHouseDetails_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_enterStoreHouseDetails_searchdata();
+            }
+        })
+    });
+
+    function ui_enterStoreHouseDetails_add() {
+        $("<div/>").dialog({
+            id: "ui_enterStoreHouseDetails_add_dialog",
+            href: "GoodsMgr/ui_enterStoreHouseDetails_add.html",
+            title: "入库",
+            height: 400,
+            width: 420,
+            modal: true,            
+            onLoad: function () {
+                $("#ui_enterStoreHouseDetails_enterStoreHouseDetailsid_add").focus();
+            },
+            onClose: function () {
+                $("#ui_enterStoreHouseDetails_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+
+    //删除入库明细（可批量）
+    function ui_enterStoreHouseDetails_delete() {
+        var rows = $("#ui_enterStoreHouseDetails_dg").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.show_warning("提示", "请选择需要删除的入库明细信息");
+            return;
+        }
+        $.messager.confirm('提示', '确定删除所选的这' + rows.length + '个入库明细信息？', function (r) {
+            if (r) {
+                para = {};
+                para.action = "delete";
+                para.timespan = new Date().getTime();
+                para.id = "";
+                $.each(rows, function (i, row) {
+                    para.id += row.Id + ",";
+                });
+                $.ajax({
+                    url: "GoodsMgr/bg_enterStoreHouseDetailsHandler.ashx",
+                    data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_enterStoreHouseDetails_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        } else {
+                            $.show_warning("提示", data.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function ui_enterStoreHouseDetails_searchdata() {
+        $("#ui_enterStoreHouseDetails_dg").datagrid('load', {
+            ui_enterStoreHouseDetails_enterDetailsSN: $('#ui_enterStoreHouseDetails_search').find('[name=ui_enterStoreHouseDetails_enterDetailsSN]').val(),
+            ui_enterStoreHouseDetails_enterSN: $('#ui_enterStoreHouseDetails_enterSN').combobox('getValue'),
+            ui_enterStoreHouseDetails_goodsName: $('#ui_enterStoreHouseDetails_goodsName').combobox('getValue'),
+            ui_enterStoreHouseDetails_categoryName: $('#ui_enterStoreHouseDetails_categoryName').combobox('getValue')
+        });
+        $("#ui_enterStoreHouseDetails_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_enterStoreHouseDetails_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_enterStoreHouseDetails_cleardata() {
+        $('#ui_enterStoreHouseDetails_search input').val('');
+        $('#ui_enterStoreHouseDetails_enterSN').combobox('setValue', '');
+        $('#ui_enterStoreHouseDetails_goodsName').combobox('setValue', '');
+        $('#ui_enterStoreHouseDetails_categoryName').combobox('setValue', '');
+        $("#ui_enterStoreHouseDetails_dg").datagrid('load', {});
+
+        $("#ui_enterStoreHouseDetails_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_enterStoreHouseDetails_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+
+<script type="text/javascript">
+    var editIndex = undefined;
+    function ui_enterStoreHouseDetails_endEditing() {
+        if (editIndex == undefined) { return true }
+        if ($('#dg_enterStoreHouseDetails').datagrid('validateRow', editIndex)) {
+            var goodsId = $('#dg_enterStoreHouseDetails').datagrid('getEditor', { index: editIndex, field: 'GoodsId' });
+            var goodsName = $(goodsId.target).combobox('getText');
+            $('#dg_enterStoreHouseDetails').datagrid('getRows')[editIndex]['GoodsName'] = goodsName;
+            $('#dg_enterStoreHouseDetails').datagrid('endEdit', editIndex);
+            editIndex = undefined;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function ui_enterStoreHouseDetails_onClickRow(index) {
+        if (editIndex != index) {
+            if (ui_enterStoreHouseDetails_endEditing()) {
+                $('#dg_enterStoreHouseDetails').datagrid('selectRow', index)
+                        .datagrid('beginEdit', index);
+                editIndex = index;
+            } else {
+                $('#dg_enterStoreHouseDetails').datagrid('selectRow', editIndex);
+            }
+        }
+    }
+    function ui_enterStoreHouseDetails_append() {
+        if (ui_enterStoreHouseDetails_endEditing()) {
+            $('#dg_enterStoreHouseDetails').datagrid('appendRow', { status: 'P' });
+            editIndex = $('#dg_enterStoreHouseDetails').datagrid('getRows').length - 1;
+            $('#dg_enterStoreHouseDetails').datagrid('selectRow', editIndex)
+                    .datagrid('beginEdit', editIndex);
+        }
+    }
+    function ui_enterStoreHouseDetails_removeit() {
+        if (editIndex == undefined) { return }
+        $('#dg_enterStoreHouseDetails').datagrid('cancelEdit', editIndex)
+                .datagrid('deleteRow', editIndex);
+        editIndex = undefined;
+    }
+    function ui_enterStoreHouseDetails_accept() {
+        
+        if (ui_enterStoreHouseDetails_endEditing()) {
+            $('#dg_enterStoreHouseDetails').datagrid('acceptChanges');
+        }
+
+        var enterDetailStr = ""; 
+
+        $.each($('#dg_enterStoreHouseDetails').datagrid('getRows'), function (i) {
+            if ($('#dg_enterStoreHouseDetails').datagrid('getRows')[i]["GoodsId"] != undefined && $('#dg_enterStoreHouseDetails').datagrid('getRows')[i]["EnterQuantity"] != undefined)
+            {
+                enterDetailStr += "{'GoodsId':'" + $('#dg_enterStoreHouseDetails').datagrid('getRows')[i]["GoodsId"] + "',";
+                enterDetailStr += "'EnterQuantity':'" + $('#dg_enterStoreHouseDetails').datagrid('getRows')[i]["EnterQuantity"] + "'},";
+            }
+            
+        });
+
+        if (enterDetailStr == "")
+        {
+            alert("没有数据可入库!");
+            return;
+        }
+
+        
+        $.ajax({
+            type: "POST",
+            url: "GoodsMgr/bg_enterStoreHouseDetailsHandler.ashx",
+            data: { action:"add",enterDetailStr:enterDetailStr },
+            success: function (data) {                
+                if (data.success) {
+                    $("#ui_enterStoreHouseDetails_add_dialog").dialog('destroy');  //销毁dialog对象
+                    $.show_warning("提示", data.msg);
+                    $("#ui_enterStoreHouseDetails_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                } else {
+                    $('#ui_enterStoreHouseDetails_add_btn').linkbutton('enable');   //恢复按钮
+                    $.show_warning("提示", data.msg);
+                }
+            }
+        })
+    }
+    function ui_enterStoreHouseDetails_reject() {
+        $('#dg_enterStoreHouseDetails').datagrid('rejectChanges');
+        editIndex = undefined;
+    }
+    function ui_enterStoreHouseDetails_getChanges() {
+        var rows = $('#dg_enterStoreHouseDetails').datagrid('getChanges');
+        alert(rows.length + ' rows are changed!');
+    }
+</script>
+
+<div id="ui_enterStoreHouseDetails_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_enterStoreHouseDetails_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">                
+                <tr>
+                    <th>
+                        入库明细编码：
+                    </th>
+                    <td>
+                        <input name="ui_enterStoreHouseDetails_enterDetailsSN" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        入库单：
+                    </th>
+                    <td>
+                        <input id="ui_enterStoreHouseDetails_enterSN" class="easyui-combobox" name="ui_enterStoreHouseDetails_enterSN"   
+                    data-options="valueField:'Id',textField:'EnterSN',url:'GoodsMgr/bg_enterStoreHouseDetailsHandler.ashx?action=getEnterStoreHouseDT'" /> 
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        类别：
+                    </th>
+                    <td>
+                        <input id="ui_enterStoreHouseDetails_categoryName" class="easyui-combobox" name="ui_enterStoreHouseDetails_categoryName"   
+                    data-options="valueField:'Id',textField:'CategoryName',url:'GoodsMgr/bg_enterStoreHouseDetailsHandler.ashx?action=getGoodsCategoryDT'" /> 
+                    </td>
+                </tr>                
+                <tr>
+                    <th>
+                        物品：
+                    </th>
+                    <td>
+                        <input id="ui_enterStoreHouseDetails_goodsName" class="easyui-combobox" name="ui_enterStoreHouseDetails_goodsName"   
+                    data-options="valueField:'Id',textField:'GoodsName',url:'GoodsMgr/bg_enterStoreHouseDetailsHandler.ashx?action=getGoodsDT'" /> 
+                    </td>
+                </tr> 
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_enterStoreHouseDetails_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_enterStoreHouseDetails_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_enterStoreHouseDetails_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

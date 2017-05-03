@@ -1,0 +1,90 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_registration_addform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input type="text" name="ui_registration_name_add" id="ui_registration_name_add" class="easyui-validatebox"
+                        data-options="required:true" autocomplete="off" />
+                </td>
+                <th>
+
+                </th>
+                <td rowspan="6">
+
+                    <div style="margin-bottom:5px;"><img style="width:100px; height:100px;" id="imgStu_add" alt="暂无图片" src="" /></div>
+                    <input type="file" id="fupPic_add" name="fupPic_add" onchange="ajaxFileUpload();" />
+                </td>
+            </tr>
+            <tr>
+                <th>身份证号：
+                </th>
+                <td>
+                    <input type="text" name="ui_registration_cardnum_add" class="easyui-validatebox" data-options="required:true,validType:'idcard'"
+                        autocomplete="off" />
+                </td>
+            </tr>
+            <tr>
+                <th>年龄:
+                </th>
+                <td>
+                    <input name="ui_registration_age_add" style="width: 70px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'age'"
+                        autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <th>性别：
+                </th>
+                <td>
+                    <select name="ui_registration_sex_add">
+                        <option value="1">男</option>
+                        <option value="0">女</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>是否本地：
+                </th>
+                <td>
+                    <select name="ui_registration_islocal_add">
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>手机号码:
+                </th>
+                <td>
+                    <input name="ui_registration_phoneNum_add" style="width: 200px;"
+                        class="easyui-validatebox" data-options="validType:'mobile'"
+                        autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <th>期数：
+                </th>
+                <td>
+                    <select name="ui_registration_period_add" id="ui_registration_period_add" class="easyui-validatebox" data-options="required:true">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>家庭住址：
+                </th>
+                <td colspan="3">
+                    <textarea rows="3" cols="80" name="ui_registration_address_add"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>备注：
+                </th>
+                <td colspan="3">
+                    <textarea rows="3" cols="80" name="ui_registration_remark_add"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

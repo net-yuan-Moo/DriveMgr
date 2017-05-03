@@ -1,0 +1,65 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_vehiclMaintenance_vehiclMaintenanceaddform" method="post" action="">
+    <table class="tableForm" width="100%">           
+        <tr>
+            <th>
+                车牌号：
+            </th>            
+            <td>
+                <input id="ui_vehiclMaintenance_LicencePlateNum_add" class="easyui-combobox" name="ui_vehiclMaintenance_LicencePlateNum_add"   
+                    data-options="required:true,valueField:'Id',textField:'LicencePlateNum',url:'FinancialMgr/bg_vehicleHandler.ashx?action=getVehicleDT'" /> 
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                维护类别：
+            </th>
+            <td>
+                <select id="ui_vehiclMaintenance_MaintenanceType_add" class="easyui-combobox" name="ui_vehiclMaintenance_MaintenanceType_add" data-options="required:true" style="width:100px;">   
+                    <option value="0">加油费</option>  
+                    <option value="1">加气费</option> 
+                    <option value="2">修理费</option>  
+                    <option value="3">过路费</option>
+                    <option value="4">停车费</option>
+                    <option value="5">其他</option>
+                </select>
+            </td>
+        </tr> 
+        <tr>
+            <th>
+                维护人：
+            </th>
+            <td>
+                <input type="text" name="ui_vehiclMaintenance_MaintenPerson_add" id="ui_vehiclMaintenance_MaintenPerson_add" class="easyui-validatebox"
+                    data-options="required:true" autocomplete="off" />
+            </td>
+        </tr> 
+        <tr>
+            <th>
+               维护时间:
+            </th>
+            <td>
+                <input name="ui_vehiclMaintenance_MaintenDate_add" id="ui_vehiclMaintenance_MaintenDate_add" class="easyui-datebox"
+                     data-options="required:true" editable="false" autocomplete="off" />
+            </td>
+         </tr>
+        <tr>
+            <th>
+                维护费用：
+            </th>
+            <td>
+                <input type="text" name="ui_vehiclMaintenance_MaintenCosts_add" id="ui_vehiclMaintenance_MaintenCosts_add" class="easyui-numberbox"
+                    data-options="required:true,min:0,precision:2" autocomplete="off" />
+            </td>
+        </tr>    
+        <tr>
+            <th>
+                备注：
+            </th>
+            <td>
+                <textarea rows="4" cols="50" name="ui_vehiclMaintenance_Remark_add" id="ui_vehiclMaintenance_Remark_add"></textarea>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>

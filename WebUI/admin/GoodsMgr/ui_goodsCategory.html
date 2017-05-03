@@ -1,0 +1,222 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前物资类别可以操作的按钮            
+            url: "ashx/bg_button.ashx?menucode=goodsCategory&pagename=ui_goodsCategory",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限   
+                        $("#ui_goodsCategory_dg").datagrid({       //初始化datagrid
+                            url: "GoodsMgr/bg_goodsCategoryHandler.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'Id',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'id',
+                            sortOrder: 'desc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             {
+                                                 width: 100,
+                                                 title: '物资类别',
+                                                 field: 'CategoryName',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 8 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }]],
+                            columns: [[                                       
+                                       {
+                                           width: 200,
+                                           title: '备注',
+                                           field: 'Remark',
+                                           sortable: true,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 5 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'CreatePerson', title: '创建人', sortable: true, width: 60,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       { field: 'CreateDate', title: '添加时间', sortable: true, width: 200 }
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前物资类别可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                //被编辑列高亮，其他列去除高亮
+                                $("#ui_goodsCategory_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                ui_goodsCategory_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_goodsCategory_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+    });
+
+    //添加物资类别
+    function ui_goodsCategory_add() {
+        $("<div/>").dialog({
+            id: "ui_goodsCategory_add_dialog",
+            href: "GoodsMgr/ui_goodsCategory_add.html",
+            title: "添加物资类别",
+            height: 350,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_goodsCategory_add_btn",
+                text: '添 加',
+                handler: function () {
+                    $("#ui_goodsCategory_goodsCategoryaddform").form("submit", {
+                        url: "GoodsMgr/bg_goodsCategoryHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_goodsCategory_add_btn').linkbutton('disable');    //点击就禁用按钮，防止连击
+                            param.action = 'add';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_goodsCategory_add_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_goodsCategory_add_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_goodsCategory_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_goodsCategory_add_btn').linkbutton('enable');   //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#ui_goodsCategory_goodsCategoryid_add").focus();
+            },
+            onClose: function () {
+                $("#ui_goodsCategory_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //修改物资类别
+    function ui_goodsCategory_edit() {
+        var row = $("#ui_goodsCategory_dg").datagrid("getChecked");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要修改的物资类别或者双击某个物资类别");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量修改");
+            $("#ui_goodsCategory_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_goodsCategory_edit_dialog",
+            href: "GoodsMgr/ui_goodsCategory_edit.html",
+            title: "修改物资类别",
+            height: 350,
+            width: 460,
+            modal: true,
+            buttons: [{
+                id: "ui_goodsCategory_edit_btn",
+                text: '修 改',
+                handler: function () {
+                    $("#ui_goodsCategory_goodsCategoryeditform").form("submit", {
+                        url: "GoodsMgr/bg_goodsCategoryHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_goodsCategory_edit_btn').linkbutton('disable');   //点击就禁用按钮，防止连击
+                            param.action = 'edit';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_goodsCategory_edit_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_goodsCategory_edit_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_goodsCategory_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_goodsCategory_edit_btn').linkbutton('enable');    //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#id").val(row[0].Id);
+                $("#ui_goodsCategory_CategoryName_edit").val(row[0].CategoryName);
+                $("#ui_goodsCategory_Remark_edit").val(row[0].Remark);
+            },
+            onClose: function () {
+                $("#ui_goodsCategory_edit_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //删除物资类别（可批量）
+    function ui_goodsCategory_delete() {
+        var rows = $("#ui_goodsCategory_dg").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.show_warning("提示", "请选择需要删除的物资类别");
+            return;
+        }
+        $.messager.confirm('提示', '确定删除所选的这' + rows.length + '个物资类别？', function (r) {
+            if (r) {
+                para = {};
+                para.action = "delete";
+                para.timespan = new Date().getTime();
+                para.id = "";
+                $.each(rows, function (i, row) {
+                    para.id += row.Id + ",";
+                });
+                $.ajax({
+                    url: "GoodsMgr/bg_goodsCategoryHandler.ashx",
+                    data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_goodsCategory_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        } else {
+                            $.show_warning("提示", data.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>
+<div id="ui_vehicle_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'center',border:false">
+        <table id="ui_goodsCategory_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

@@ -1,0 +1,287 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DriveMgr.IDAL;
+using System.Data.SqlClient;
+using System.Data;
+using DriveMgr.Model;
+
+namespace DriveMgr.SQLServerDAL
+{
+    public class PriceConfigDAL:IPriceConfigDAL
+    {
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool IsExistPriceConfig(string priceTypeName)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from tb_PriceConfig");
+            strSql.Append(" where PriceTypeName=@PriceTypeName");
+            SqlParameter[] parameters = {
+					new SqlParameter("@Id", SqlDbType.Int,4)
+			};
+            parameters[0].Value = priceTypeName;
+
+            int rows = DriveMgr.Common.SqlHelper.ExecuteNonQuery(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }    
+        }
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public bool AddPriceConfig(PriceConfigModel model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into tb_PriceConfig(");
+            strSql.Append("ConfigType,PriceTypeName,Price,Remark,DeleteMark,CreatePerson,CreateDate,UpdatePerson,UpdateDate)");
+            strSql.Append(" values (");
+            strSql.Append("@ConfigType,@PriceTypeName,@Price,@Remark,@DeleteMark,@CreatePerson,@CreateDate,@UpdatePerson,@UpdateDate)");
+
+            SqlParameter[] parameters = {
+					new SqlParameter("@ConfigType", SqlDbType.Int,4),
+					new SqlParameter("@PriceTypeName", SqlDbType.VarChar,50),
+					new SqlParameter("@Price", SqlDbType.Money,8),
+					new SqlParameter("@Remark", SqlDbType.VarChar,500),
+                    new SqlParameter("@DeleteMark", SqlDbType.Bit,1),
+					new SqlParameter("@CreatePerson", SqlDbType.VarChar,50),
+					new SqlParameter("@CreateDate", SqlDbType.DateTime),
+					new SqlParameter("@UpdatePerson", SqlDbType.VarChar,50),
+					new SqlParameter("@UpdateDate", SqlDbType.DateTime)};
+            parameters[0].Value = model.ConfigType;
+            parameters[1].Value = model.PriceTypeName;
+            parameters[2].Value = model.Price;
+            parameters[3].Value = model.Remark;
+            parameters[4].Value = model.DeleteMark;
+            parameters[5].Value = model.CreatePerson;
+            parameters[6].Value = model.CreateDate;
+            parameters[7].Value = model.UpdatePerson;
+            parameters[8].Value = model.UpdateDate;
+
+            int rows = DriveMgr.Common.SqlHelper.ExecuteNonQuery(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }    
+        }
+
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public bool UpdatePriceConfig(PriceConfigModel model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update tb_PriceConfig set ");
+            strSql.Append("ConfigType=@ConfigType,");
+            strSql.Append("PriceTypeName=@PriceTypeName,");
+            strSql.Append("Price=@Price,");
+            strSql.Append("Remark=@Remark,");
+            strSql.Append("DeleteMark=@DeleteMark,");
+            strSql.Append("CreatePerson=@CreatePerson,");
+            strSql.Append("CreateDate=@CreateDate,");
+            strSql.Append("UpdatePerson=@UpdatePerson,");
+            strSql.Append("UpdateDate=@UpdateDate");
+            strSql.Append(" where Id=@Id");
+            SqlParameter[] parameters = {
+					new SqlParameter("@ConfigType", SqlDbType.Int,4),
+					new SqlParameter("@PriceTypeName", SqlDbType.VarChar,50),
+					new SqlParameter("@Price", SqlDbType.Money,8),
+					new SqlParameter("@Remark", SqlDbType.VarChar,500),
+                    new SqlParameter("@DeleteMark", SqlDbType.Bit,1),
+                    new SqlParameter("@CreatePerson", SqlDbType.VarChar,50),
+					new SqlParameter("@CreateDate", SqlDbType.DateTime),
+					new SqlParameter("@UpdatePerson", SqlDbType.VarChar,50),
+					new SqlParameter("@UpdateDate", SqlDbType.DateTime),
+                    new SqlParameter("@Id", SqlDbType.Int,4)};
+            parameters[0].Value = model.ConfigType;
+            parameters[1].Value = model.PriceTypeName;
+            parameters[2].Value = model.Price;
+            parameters[3].Value = model.Remark;
+            parameters[4].Value = model.DeleteMark;
+            parameters[5].Value = model.CreatePerson;
+            parameters[6].Value = model.CreateDate;
+            parameters[7].Value = model.UpdatePerson;
+            parameters[8].Value = model.UpdateDate;
+            parameters[9].Value = model.Id;
+
+            int rows = DriveMgr.Common.SqlHelper.ExecuteNonQuery(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql.ToString(), parameters);
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }    
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public bool DeletePriceConfig(int id)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("Update tb_PriceConfig Set DeleteMark = 1 ");
+            strSql.Append(" where Id=@Id");
+            SqlParameter[] parameters = {
+					new SqlParameter("@Id", SqlDbType.Int,4)
+			};
+            parameters[0].Value = id;
+
+            object obj = DriveMgr.Common.SqlHelper.ExecuteNonQuery(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql.ToString(), parameters);
+            if (Convert.ToInt32(obj) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }    
+        }
+
+        /// <summary>
+        /// 批量删除数据
+        /// </summary>
+        public bool DeletePriceConfigList(string idlist)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("Update tb_PriceConfig Set DeleteMark = 1 ");
+            strSql.Append(" where Id in (" + idlist + ")  ");
+            try
+            {
+                DriveMgr.Common.SqlHelper.ExecuteNonQuery(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql.ToString());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public PriceConfigModel GetPriceConfigModel(int Id)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 Id,ConfigType,PriceTypeName,Price,Remark,DeleteMark,CreatePerson,CreateDate,UpdatePerson,UpdateDate from tb_PriceConfig ");
+            strSql.Append(" where Id=@Id");
+            SqlParameter[] parameters = {
+					new SqlParameter("@Id", SqlDbType.Int,4)
+			};
+            parameters[0].Value = Id;
+
+            PriceConfigModel model = new PriceConfigModel();
+            DataSet ds = DriveMgr.Common.SqlHelper.GetDataset(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                return DataRowToModel(ds.Tables[0].Rows[0]);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        private PriceConfigModel DataRowToModel(DataRow row)
+        {
+            PriceConfigModel model = new PriceConfigModel();
+            if (row != null)
+            {
+                if (row["Id"] != null && row["Id"].ToString() != "")
+                {
+                    model.Id = int.Parse(row["Id"].ToString());
+                }
+                if (row["ConfigType"] != null && row["ConfigType"].ToString() != "")
+                {
+                    model.ConfigType = int.Parse(row["ConfigType"].ToString());
+                }
+                if (row["PriceTypeName"] != null)
+                {
+                    model.PriceTypeName = row["PriceTypeName"].ToString();
+                }                
+                if (row["Price"] != null && row["Price"].ToString() != "")
+                {
+                    model.Price = decimal.Parse(row["Price"].ToString());
+                }
+                if (row["Remark"] != null)
+                {
+                    model.Remark = row["Remark"].ToString();
+                }
+                if (row["DeleteMark"] != null && row["DeleteMark"].ToString() != "")
+                {
+                    if ((row["DeleteMark"].ToString() == "1") || (row["DeleteMark"].ToString().ToLower() == "true"))
+                    {
+                        model.DeleteMark = true;
+                    }
+                    else
+                    {
+                        model.DeleteMark = false;
+                    }
+                }
+                if (row["CreatePerson"] != null)
+                {
+                    model.CreatePerson = row["CreatePerson"].ToString();
+                }
+                if (row["CreateDate"] != null && row["CreateDate"].ToString() != "")
+                {
+                    model.CreateDate = DateTime.Parse(row["CreateDate"].ToString());
+                }
+                if (row["UpdatePerson"] != null)
+                {
+                    model.UpdatePerson = row["UpdatePerson"].ToString();
+                }
+                if (row["UpdateDate"] != null && row["UpdateDate"].ToString() != "")
+                {
+                    model.UpdateDate = DateTime.Parse(row["UpdateDate"].ToString());
+                }
+            }
+            return model;
+        }
+
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="columns">要取的列名（逗号分开）</param>
+        /// <param name="order">排序</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="pageIndex">当前页</param>
+        /// <param name="where">查询条件</param>
+        /// <param name="totalCount">总记录数</param>
+        public string GetPagerData(string tableName, string columns, string order, int pageSize, int pageIndex, string where, out int totalCount)
+        {
+            DataTable dt = DriveMgr.Common.SqlPagerHelper.GetPagerData(DriveMgr.Common.SqlHelper.financialMgrConn, tableName, columns, order, pageSize, pageIndex, where, out totalCount);
+            return DriveMgr.Common.JsonHelper.ToJson(dt);
+        }
+
+        /// <summary>
+        /// 获取单价配置集合
+        /// </summary>
+        /// <returns></returns>
+        public string GetPriceConfigDT(int configType)
+        {
+            string strSql = "select Id,PriceTypeName,Price from tb_PriceConfig ";
+            strSql += "Where DeleteMark = 0 and ConfigType = " + configType;
+            DataTable dt = DriveMgr.Common.SqlHelper.GetDataTable(DriveMgr.Common.SqlHelper.financialMgrConn, CommandType.Text, strSql);
+            return DriveMgr.Common.JsonHelper.ToJson(dt);
+        }
+    }
+}

@@ -1,0 +1,140 @@
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.pdb
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\log4net.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\nunit.framework.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.Model.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.Common.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.pdb
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.Model.pdb
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\log4net.xml
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\nunit.framework.xml
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.pdb
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.pdb
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\bin\Debug\ZGZY.Common.pdb
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\obj\Debug\ResolveAssemblyReference.cache
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.dll
+E:\Downloads\工作积累\html + ajax + ashx + easyui 权限管理系统\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.pdb
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.pdb
+E:\代码\ZGZY\BLLTest\bin\Debug\log4net.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\nunit.framework.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.Model.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.Common.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.dll
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.pdb
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.Model.pdb
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.pdb
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.Common.pdb
+E:\代码\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.pdb
+E:\代码\ZGZY\BLLTest\obj\Debug\ResolveAssemblyReference.cache
+E:\代码\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.dll
+E:\代码\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\log4net.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\nunit.framework.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Model.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Common.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Model.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Common.pdb
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\obj\Debug\ResolveAssemblyReference.cache
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.dll
+F:\Downloads\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLLTest.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\log4net.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\nunit.framework.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Model.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Common.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.BLL.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Model.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.IDAL.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.Common.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\bin\Debug\ZGZY.DALFactory.pdb
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\obj\Debug\ResolveAssemblyReference.cache
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.dll
+E:\工作积累\html+js+ashx+easyui 权限管理系统 博客版\ZGZY\BLLTest\obj\Debug\ZGZY.BLLTest.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLLTest.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLLTest.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLL.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.Model.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\log4net.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\nunit.framework.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.IDAL.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.DALFactory.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.Common.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\Newtonsoft.Json.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLL.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.Model.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.IDAL.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.DALFactory.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\bin\Debug\DriveMgr.Common.pdb
+E:\项目\权限管理系统\DriveMgr\BLLTest\obj\Debug\BLLTest.csprojResolveAssemblyReference.cache
+E:\项目\权限管理系统\DriveMgr\BLLTest\obj\Debug\DriveMgr.BLLTest.dll
+E:\项目\权限管理系统\DriveMgr\BLLTest\obj\Debug\DriveMgr.BLLTest.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLLTest.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLLTest.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLL.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.Model.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\log4net.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\nunit.framework.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.IDAL.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.DALFactory.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.Common.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\Newtonsoft.Json.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLL.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.Model.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.IDAL.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.DALFactory.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\DriveMgr.Common.pdb
+F:\源码\DriveMgr\BLLTest\obj\Debug\BLLTest.csprojResolveAssemblyReference.cache
+F:\源码\DriveMgr\BLLTest\obj\Debug\DriveMgr.BLLTest.dll
+F:\源码\DriveMgr\BLLTest\obj\Debug\DriveMgr.BLLTest.pdb
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.OOXML.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.OpenXmlFormats.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.OpenXml4Net.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\ICSharpCode.SharpZipLib.dll
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.OOXML.xml
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.xml
+F:\源码\DriveMgr\BLLTest\bin\Debug\NPOI.OpenXml4Net.xml
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLLTest.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLLTest.pdb
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLL.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.Model.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\log4net.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\nunit.framework.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.IDAL.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.Common.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.DALFactory.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.OOXML.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\Newtonsoft.Json.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.OpenXmlFormats.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.OpenXml4Net.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\ICSharpCode.SharpZipLib.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.BLL.pdb
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.Model.pdb
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.IDAL.pdb
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.Common.pdb
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\DriveMgr.DALFactory.pdb
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.OOXML.xml
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.xml
+I:\项目\SmartOfLife\DriveMgr\BLLTest\bin\Debug\NPOI.OpenXml4Net.xml
+I:\项目\SmartOfLife\DriveMgr\BLLTest\obj\Debug\BLLTest.csprojResolveAssemblyReference.cache
+I:\项目\SmartOfLife\DriveMgr\BLLTest\obj\Debug\DriveMgr.BLLTest.dll
+I:\项目\SmartOfLife\DriveMgr\BLLTest\obj\Debug\DriveMgr.BLLTest.pdb

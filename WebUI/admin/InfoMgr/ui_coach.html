@@ -1,0 +1,310 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前用户可以操作的按钮
+            url: "ashx/bg_button.ashx?menucode=coach&pagename=ui_coach",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限
+                        $("#ui_coach_dg").datagrid({       //初始化datagrid
+                            url: "InfoMgr/bg_coachHandler.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'CoachName',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'ID',
+                            sortOrder: 'desc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             { field: 'ck', checkbox: true },
+                                             {
+                                                 width: 100,
+                                                 title: '教练姓名',
+                                                 field: 'CoachName',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 8 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }, {
+                                                 width: 180,
+                                                 title: '身份证号',
+                                                 field: 'CardNum',
+                                                 sortable: true
+                                             }]],
+                            columns: [[
+                                       {
+                                           field: 'Age', title: '年龄', sortable: true, width: 180, align: 'center'
+
+                                       }, {
+                                           field: 'Sex', title: '性别', sortable: true, width: 100, align: 'center',
+                                           formatter: function (value, row, index) {
+                                               return value ? '男' : '女';
+                                           }
+                                       }, {
+                                           field: 'Address', title: '地址', sortable: true, width: 180, align: 'center'
+
+                                       }, {
+                                           field: 'Phone', title: '电话号码', sortable: true, width: 180, align: 'center'
+
+                                       }, {
+                                           field: 'CoachStatus', title: '教练状态', sortable: true, width: 100, align: 'center',
+                                           formatter: function (value, row, index) {
+                                               return value==1 ? '启用' : '禁用';
+                                           }
+                                       }
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前用户可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                //被编辑列高亮，其他列去除高亮
+                                $("#ui_coach_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                ui_coach_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_coach_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_coach_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_coach_searchdata();
+            }
+        })
+    });
+
+    //添加教练
+    function ui_coach_add() {
+        $("<div/>").dialog({
+            id: "ui_coach_add_dialog",
+            href: "InfoMgr/ui_coach_add.html",
+            title: "添加教练",
+            height: 450,
+            width: 560,
+            modal: true,
+            buttons: [{
+                id: "ui_coach_add_btn",
+                text: '添 加',
+                handler: function () {
+                    $("#ui_coach_addform").form("submit", {
+                        url: "InfoMgr/bg_coachHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_coach_add_btn').linkbutton('disable');    //点击就禁用按钮，防止连击
+                            param.action = 'add';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_coach_add_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_coach_add_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_coach_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_coach_add_btn').linkbutton('enable');   //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#ui_coach_name_add").focus();
+            },
+            onClose: function () {
+                $("#ui_coach_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //修改教练
+    function ui_coach_edit() {
+        var row = $("#ui_coach_dg").datagrid("getSelections");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要修改的或者教练双击某个教练");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量修改");
+            $("#ui_coach_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_coach_edit_dialog",
+            href: "InfoMgr/ui_coach_edit.html",
+            title: "修改教练",
+            height: 450,
+            width: 560,
+            modal: true,
+            buttons: [{
+                id: "ui_coach_edit_btn",
+                text: '修 改',
+                handler: function () {
+                    $("#ui_coach_editform").form("submit", {
+                        url: "InfoMgr/bg_coachHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_coach_edit_btn').linkbutton('disable');   //点击就禁用按钮，防止连击
+                            param.action = 'edit';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_coach_edit_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_coach_edit_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_coach_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_coach_edit_btn').linkbutton('enable');    //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#coachid_edit").val(row[0].ID);
+                $("#ui_coach_name_edit").val(row[0].CoachName);
+                $("#ui_coach_cardnum_edit").val(row[0].CardNum);
+                $("#ui_coach_age_edit").val(row[0].Age);
+
+                if (row[0].Sex) {
+                    $("#ui_coach_sex_edit").val("1");
+                }
+                else {
+                    $("#ui_coach_sex_edit").val("0");
+                }
+                
+                $("#ui_coach_phonenum_edit").val(row[0].Phone);
+                $("#ui_coach_address_edit").val(row[0].Address);
+                
+            },
+            onClose: function () {
+                $("#ui_coach_edit_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //删除教练（可批量）
+    function ui_coach_delete() {
+        var rows = $("#ui_coach_dg").datagrid("getSelections");
+        if (rows.length < 1) {
+            $.show_warning("提示", "请先勾选要删除的教练");
+            return;
+        }
+        $.messager.confirm('提示', '确定删除勾选的这' + rows.length + '个教练？', function (r) {
+            if (r) {
+                para = {};
+                para.action = "delete";
+                para.coachid_delete = "";
+                $.each(rows, function (i, row) {
+                    para.coachid_delete += row.ID + ",";
+                });
+                $.ajax({
+                    url: "InfoMgr/bg_coachHandler.ashx",
+                    data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_coach_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        } else {
+                            $.show_warning("提示", data.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
+    function ui_coach_searchdata() {
+        $("#ui_coach_dg").datagrid('load', {
+            ui_coach_name: $('#ui_coach_search').find('[name=ui_coach_name]').val(),
+            ui_coach_address: $('#ui_coach_search').find('[name=ui_coach_address]').val(),
+            ui_coach_phonenum: $('#ui_coach_search').find('[name=ui_coach_phonenum]').val()
+        });
+        $("#ui_coach_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_archives_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_coach_cleardata() {
+        $('#ui_coach_search input').val('');
+        $('#ui_coach_search select').val('select');
+
+        $("#ui_coach_dg").datagrid('load', {});
+
+        $("#ui_coach_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_archives_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+<div id="ui_coach_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_coach_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">
+                <tr>
+                    <th>
+                        教练姓名：
+                    </th>
+                    <td>
+                        <input name="ui_coach_name" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        身份证号：
+                    </th>
+                    <td>
+                        <input name="ui_coach_phonenum" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        住址：
+                    </th>
+                    <td>
+                        <input name="ui_coach_address" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_coach_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_coach_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_coach_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

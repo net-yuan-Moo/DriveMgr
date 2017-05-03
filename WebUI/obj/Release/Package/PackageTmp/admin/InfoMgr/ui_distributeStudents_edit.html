@@ -1,0 +1,36 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_distributeStudents_editform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input  type="hidden" id="ui_distributeStudentsid_edit" name="ui_distributeStudentsid_edit"/>
+  <!--                  <input type="text" name="ui_distributeStudents_name_edit" id="ui_distributeStudents_name_edit" class="easyui-validatebox"
+                        data-options="required:true" autocomplete="off" />-->
+                    <span id="ui_distributeStudents_name_edit"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>学员编号：
+                </th>
+                <td>
+          <!--          <input type="text" name="ui_distributeStudents_code_edit" id="ui_distributeStudents_code_edit" class="easyui-validatebox" data-options="required:true"
+                        autocomplete="off" />-->
+                    <span id="ui_distributeStudents_code_edit"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>教练名称:
+                </th>
+                <td>
+<!--                    <input name="ui_distributeStudents_coach_edit" id="ui_distributeStudents_coach_edit" class="easyui-numberspinner" style="width: 70px;"
+                        value="20" data-options="min:1,max:100,editable:true">-->
+
+                    <input id="ui_distributeStudents_coach_edit" class="easyui-combobox" name="ui_distributeStudents_coach_edit"   
+                    data-options="valueField:'ID',textField:'CoachName',url:'InfoMgr/bg_coachHandler.ashx?action=getAllCoach'" /> 
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

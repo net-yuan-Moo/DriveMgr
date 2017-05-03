@@ -1,0 +1,54 @@
+﻿
+<!DOCTYPE html>
+<html id="ui_outStoreHouseDetails_outStoreHouseDetailsHtml">
+<head>
+	<meta charset="UTF-8">	
+	<link rel="stylesheet" type="text/css" href="../admin/css/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../admin/css/icon.css">
+	<link rel="stylesheet" type="text/css" href="../admin/css/demo.css">
+	<script type="text/javascript" src="../admin/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../admin/js/jquery.easyui.min.js"></script>
+</head>
+<body>	
+	<table id="dg_outStoreHouseDetails" class="easyui-datagrid" style="width:400;height:auto"
+			data-options="
+				iconCls: 'icon-edit',
+				singleSelect: true,
+				toolbar: '#tb_outStoreHouseDetails',				
+				method: 'get',
+				onClickRow: ui_outStoreHouseDetails_onClickRow
+			">
+		<thead>
+			<tr>				
+				<th data-options="field:'GoodsId',width:200,align:'center',	
+                    formatter:function(value,row){
+							return row.GoodsName;
+						},					
+						editor:{
+							type:'combobox',
+							options:{
+								valueField:'Id',
+								textField:'GoodsName',
+                                missingMessage: '请选择物品',
+								method:'get',
+								url:'GoodsMgr/bg_outStoreHouseDetailsHandler.ashx?action=getGoodsDT',
+								required:true
+							}
+						}">物品</th>                
+				<th data-options="field:'OutQuantity',width:200,align:'center',editor:{type:'numberbox',options:{required:true,missingMessage: '请填写数量'}}">数量</th>
+			</tr>
+		</thead>
+	</table>
+
+	<div id="tb_outStoreHouseDetails" style="height:auto">
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="ui_outStoreHouseDetails_append()">增加</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="ui_outStoreHouseDetails_removeit()">移除</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="ui_outStoreHouseDetails_accept()">保存</a>
+		<!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="ui_outStoreHouseDetails_reject()">Reject</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="ui_outStoreHouseDetails_getChanges()">GetChanges</a>-->
+	</div>
+	
+	
+</body>
+</html>
+

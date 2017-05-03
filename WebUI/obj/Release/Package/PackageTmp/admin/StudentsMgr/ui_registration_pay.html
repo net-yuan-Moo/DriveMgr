@@ -1,0 +1,47 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_registration_payform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input type="hidden" name="pay_id" id="pay_id" />
+                    <input type="hidden" name="islocal_pay" id="islocal_pay" />
+                    
+                    <span id="ui_registration_name_pay" ></span>
+                </td>
+            </tr>
+            <tr>
+                <th>应交费金额：
+                </th>
+                <td>
+                    <span id="ui_registration_shoudpay_pay" ></span>
+                </td>
+            </tr>
+            <tr>
+                <th>实际交费金额:
+                </th>
+                <td>
+                    <input name="ui_registration_realpay_pay" style="width: 100px;"
+                        class="easyui-validatebox" data-options="required:true,validType:'currency'"
+                        autocomplete="off">
+                </td>
+            </tr>
+            
+            <tr>
+                <th>备注：
+                </th>
+                <td>
+                    <textarea rows="3" cols="30" name="ui_registration_remark_pay"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>交清学费：
+                </th>
+                <td>
+                    <input type="checkbox" id="ui_registration_status_pay" name="ui_registration_status_pay" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

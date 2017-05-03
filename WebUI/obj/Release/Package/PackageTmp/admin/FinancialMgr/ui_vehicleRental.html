@@ -1,0 +1,365 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $.ajax({     //请求当前车辆出租费用可以操作的按钮            
+            url: "ashx/bg_button.ashx?menucode=vehicleRental&pagename=ui_vehicleRental",
+            type: "post",
+            data: { "action": "getbutton" },
+            dataType: "json",
+            timeout: 5000,
+            success: function (data) {
+                if (data.success) {
+                    var toolbar = getToolBar(data);    //common.js
+                    if (data.browser) {    //判断是否有浏览权限                        
+                        $("#ui_vehicleRental_dg").datagrid({       //初始化datagrid
+                            url: "FinancialMgr/bg_vehicleRentalHandler.ashx?action=search",
+                            striped: true, rownumbers: true, pagination: true, pageSize: 20,
+                            idField: 'Id',  //这个idField必须指定为输出的id，输出的是Id就必须是Id，不能小写
+                            sortName: 'id',
+                            sortOrder: 'desc',
+                            pageList: [20, 40, 60, 80, 100],
+                            frozenColumns: [[
+                                             {
+                                                 width: 100,
+                                                 title: '学员',
+                                                 field: 'StudentName',
+                                                 sortable: true,
+                                                 formatter: function (value, row, index) {
+                                                     return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                                 }
+                                             }]],
+                            columns: [[
+                                       //{
+                                       //    field: 'CoachName', title: '教练', sortable: true, width: 100, align: 'center',
+                                       //    formatter: function (value, row, index) {
+                                       //        return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                       //    }
+                                       //},
+                                       { field: 'RentDate', title: '出租时间', sortable: true, width: 200 },
+                                       {
+                                           field: 'LicencePlateNum', title: '车牌号', sortable: true, width: 100, align: 'center',
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'PriceTypeName', title: '计价类型', sortable: true, width: 50,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'Price', title: '单价', sortable: true, width: 50,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'Longer', title: '时长', sortable: true, width: 50,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'TotalPrice', title: '总价', sortable: true, width: 50,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           width: 200,
+                                           title: '备注',
+                                           field: 'Remark',
+                                           sortable: true,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 5 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       {
+                                           field: 'CreatePerson', title: '创建人', sortable: true, width: 60,
+                                           formatter: function (value, row, index) {
+                                               return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           }
+                                       },
+                                       { field: 'CreateDate', title: '添加时间', sortable: true, width: 200 }
+
+                            ]],
+                            toolbar: toolbar.length == 0 ? null : toolbar,   //请求回来的当前车辆出租费用可以操作的按钮
+                            onDblClickRow: function (rowIndex, rowData) {     //双击行弹框编辑
+                                //被编辑列高亮，其他列去除高亮
+                                $("#ui_vehicleRental_dg").datagrid('clearSelections').datagrid('clearChecked').datagrid('checkRow', rowIndex);
+                                ui_vehicleRental_edit();
+                            }
+                        });
+                    }
+                    else {
+                        $("#ui_vehicleRental_layout").layout("remove", "east");    //如果没有浏览权限就移除搜索
+                        $.show_warning("提示", "无权限，请联系管理员！");
+                    }
+                } else {
+                    $.show_warning("错误", data.result);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (textStatus == "timeout") {
+                    $.show_warning("提示", "请求超时，请刷新当前页重试！");
+                }
+                else {
+                    $.show_warning("错误", textStatus + "：" + errorThrown);
+                }
+            }
+        })
+
+        //回车搜索
+        $("#ui_vehicleRental_search").find('input').on('keyup', function (event) {
+            if (event.keyCode == '13') {
+                ui_vehicleRental_searchdata();
+            }
+        })
+    });
+
+    //添加车辆出租费用
+    function ui_vehicleRental_add() {
+        $("<div/>").dialog({
+            id: "ui_vehicleRental_add_dialog",
+            href: "FinancialMgr/ui_vehicleRental_add.html",
+            title: "添加车辆出租费用信息",
+            height: 500,
+            width: 560,
+            modal: true,
+            buttons: [{
+                id: "ui_vehicleRental_add_btn",
+                text: '添 加',
+                handler: function () {
+                    $("#ui_vehicleRental_vehicleRentaladdform").form("submit", {
+                        url: "FinancialMgr/bg_vehicleRentalHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_vehicleRental_add_btn').linkbutton('disable');    //点击就禁用按钮，防止连击
+                            param.action = 'add';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_vehicleRental_add_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_vehicleRental_add_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_vehicleRental_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_vehicleRental_add_btn').linkbutton('enable');   //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#ui_vehicleRental_vehicleRentalid_add").focus();
+            },
+            onClose: function () {
+                $("#ui_vehicleRental_add_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //修改车辆出租费用
+    function ui_vehicleRental_edit() {
+        var row = $("#ui_vehicleRental_dg").datagrid("getChecked");
+        if (row.length < 1) {
+            $.show_warning("提示", "请先勾选要修改的车辆出租费用或者双击某个车辆出租费用信息");
+            return;
+        }
+        if (row.length > 1) {
+            $.show_warning("提示", "不支持批量修改");
+            $("#ui_vehicleRental_dg").datagrid('clearSelections').datagrid('clearChecked');
+            return;
+        }
+        $("<div/>").dialog({
+            id: "ui_vehicleRental_edit_dialog",
+            href: "FinancialMgr/ui_vehicleRental_edit.html",
+            title: "修改车辆出租费用信息",
+            height: 500,
+            width: 560,
+            modal: true,
+            buttons: [{
+                id: "ui_vehicleRental_edit_btn",
+                text: '修 改',
+                handler: function () {
+                    $("#ui_vehicleRental_vehicleRentaleditform").form("submit", {
+                        url: "FinancialMgr/bg_vehicleRentalHandler.ashx",
+                        onSubmit: function (param) {
+                            $('#ui_vehicleRental_edit_btn').linkbutton('disable');   //点击就禁用按钮，防止连击
+                            param.action = 'edit';
+                            if ($(this).form('validate'))
+                                return true;
+                            else {
+                                $('#ui_vehicleRental_edit_btn').linkbutton('enable');   //恢复按钮
+                                return false;
+                            }
+                        },
+                        success: function (data) {
+                            var dataJson = eval('(' + data + ')');    //转成json格式
+                            if (dataJson.success) {
+                                $("#ui_vehicleRental_edit_dialog").dialog('destroy');  //销毁dialog对象
+                                $.show_warning("提示", dataJson.msg);
+                                $("#ui_vehicleRental_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                            } else {
+                                $('#ui_vehicleRental_edit_btn').linkbutton('enable');    //恢复按钮
+                                $.show_warning("提示", dataJson.msg);
+                            }
+                        }
+                    });
+                }
+            }],
+            onLoad: function () {
+                $("#id").val(row[0].Id);
+                //$("#ui_vehicleRental_StudentName_edit").combobox('setValue', row[0].StudentName);
+                $("#ui_vehicleRental_StudentName_edit").val(row[0].StudentName);
+                //$("#ui_vehicleRental_CoachName_edit").combobox('setValue', row[0].CoachName);
+                $("#ui_vehicleRental_RentDate_edit").datebox('setValue', row[0].RentDate);
+                $("#ui_vehicleRental_LicencePlateNum_edit").combobox('setValue', row[0].VehicleId);
+                $("#ui_vehicleRental_PriceConfig_edit").combobox('setValue', row[0].PriceConfigID);
+                $("#ui_vehicleRental_Longer_edit").numberbox('setValue', row[0].Longer);
+                $("#ui_vehicleRental_TotalPrice_edit").numberbox('setValue', row[0].TotalPrice);
+                $("#ui_vehicleRental_Remark_edit").val(row[0].Remark);
+            },
+            onClose: function () {
+                $("#ui_vehicleRental_edit_dialog").dialog('destroy');  //销毁dialog对象
+            }
+        });
+    }
+    //删除车辆出租费用（可批量）
+    function ui_vehicleRental_delete() {
+        var rows = $("#ui_vehicleRental_dg").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.show_warning("提示", "请选择需要删除的车辆出租费用信息");
+            return;
+        }
+        $.messager.confirm('提示', '确定删除所选的这' + rows.length + '个车辆出租费用信息？', function (r) {
+            if (r) {
+                para = {};
+                para.action = "delete";
+                para.timespan = new Date().getTime();
+                para.id = "";
+                $.each(rows, function (i, row) {
+                    para.id += row.Id + ",";
+                });
+                $.ajax({
+                    url: "FinancialMgr/bg_vehicleRentalHandler.ashx",
+                    data: para,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            $.show_warning("提示", data.msg);
+                            $("#ui_vehicleRental_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
+                        } else {
+                            $.show_warning("提示", data.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function ui_vehicleRental_searchdata() {
+        $("#ui_vehicleRental_dg").datagrid('load', {
+            ui_vehicleRental_studentName: $('#ui_vehicleRental_search').find('[name=ui_vehicleRental_studentName]').val(),
+            //ui_vehicleRental_coachName: $('#ui_vehicleRental_search').find('[name=ui_vehicleRental_coachName]').val(),
+            ui_vehicleRental_licencePlateNum: $('#ui_vehicleRental_licencePlateNum').combobox('getValue'),
+            ui_vehicleRental_priceConfig: $('#ui_vehicleRental_priceConfig').combobox('getValue'),
+            ui_vehicleRental_createStartDate: $('#ui_vehicleRental_createStartDate').datebox('getValue'),
+            ui_vehicleRental_createEndDate: $('#ui_vehicleRental_createEndDate').datebox('getValue')
+        });
+        $("#ui_vehicleRental_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_vehicleRental_layout').layout('collapse', 'east');    //隐藏
+    }
+    function ui_vehicleRental_cleardata() {
+        $('#ui_vehicleRental_search input').val('');
+        $('#ui_vehicleRental_licencePlateNum').combobox('setValue', '');
+        $('#ui_vehicleRental_priceConfig').combobox('setValue', '');
+        $('#ui_vehicleRental_createStartDate').datebox('setValue', '');
+        $('#ui_vehicleRental_createEndDate').datebox('setValue', '');
+        $("#ui_vehicleRental_dg").datagrid('load', {});
+
+        $("#ui_vehicleRental_dg").datagrid('clearSelections').datagrid('clearChecked');
+        //$('#ui_vehicleRental_layout').layout('collapse', 'east');    //隐藏
+    }
+</script>
+<div id="ui_vehicleRental_layout" class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'east',split:true,border:true,collapsed:true" title="多条件过滤"
+        style="width: 280px;">
+        <div id="ui_vehicleRental_search">
+            <table class="tableForm" style="width: 100%; height: 100%; background: #F5F5F5;">                
+                <tr>
+                    <th>
+                        学员：
+                    </th>
+                    <td>
+                        <input name="ui_vehicleRental_studentName" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>
+                <!--<tr>
+                    <th>
+                        教练：
+                    </th>
+                    <td>
+                        <input name="ui_vehicleRental_coachName" autocomplete="off" style="width: 130px;" />
+                    </td>
+                </tr>-->
+                <tr>
+                    <th>
+                        车牌号：
+                    </th>
+                    <td>
+                        <input id="ui_vehicleRental_licencePlateNum" class="easyui-combobox" name="ui_vehicleRental_licencePlateNum"   
+                    data-options="valueField:'Id',textField:'LicencePlateNum',url:'FinancialMgr/bg_vehicleHandler.ashx?action=getVehicleDT'" /> 
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        计价类型：
+                    </th>
+                    <td>
+                        <input id="ui_vehicleRental_priceConfig" class="easyui-combobox" name="ui_vehicleRental_priceConfig"   
+                    data-options="valueField:'Id',textField:'PriceTypeName',url:'FinancialMgr/bg_vehicleRentalHandler.ashx?action=getPriceConfigDT'" /> 
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        添加时间：
+                    </th>
+                    <td>
+                        <input name="ui_vehicleRental_createStartDate" id="ui_vehicleRental_createStartDate" class="easyui-datebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        至：
+                    </th>
+                    <td>
+                        <input name="ui_vehicleRental_createEndDate" id="ui_vehicleRental_createEndDate" class="easyui-datebox"
+                            editable="false" style="width: 140px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-search" plain="true"
+                            onclick="ui_vehicleRental_searchdata();">搜索</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" iconcls="icon-clear" plain="true"
+                            onclick="ui_vehicleRental_cleardata();">清空条件</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="ui_vehicleRental_dg" data-options="fit:true,border:false">
+        </table>
+    </div>
+</div>

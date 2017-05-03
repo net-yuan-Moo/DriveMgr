@@ -1,0 +1,25 @@
+﻿
+<script type="text/javascript">
+    $(function () {
+        //监听windows大小  
+        var contentwidth = parent.$('.layout-panel-center').width() - 5, // 第一次加载时center面板的宽度  
+            width = $('.gridcontainer').width(), //给grid加一个container层，并记录  
+            mwidth = contentwidth - width; //确定偏量  
+
+        var contentheight = parent.$('.layout-panel-center').height() - 31, // 第一次加载时center面板的宽度  
+            height = $('.gridcontainer').height(), //给grid加一个container层，并记录  
+            mheight = contentheight - height; //确定偏量  
+        $("#expenditureConfigtab").css("width", contentwidth.toString() + "px");
+        $("#expenditureConfigtab").css("height", contentheight.toString() + "px");
+    });
+</script>
+<div class="easyui-tabs" id="expenditureConfigtab" style="width: 1px; height: 1px">
+    <div  data-options="href:'FinancialMgr/ui_businessEntertain.html',closable:false,icon: 'icon-house'" title="业务招待管理"></div>
+    <div  data-options="href:'FinancialMgr/ui_office.html',closable:false,icon: 'icon-house'" title="办公用品管理"></div>
+
+    <div  data-options="href:'FinancialMgr/ui_repayment.html',closable:false,icon: 'icon-house'" title="还款管理"></div>
+
+    <div  data-options="href:'FinancialMgr/ui_travel.html',closable:false,icon: 'icon-house'" title="差旅管理"></div>
+    <div  data-options="href:'FinancialMgr/ui_vehiclMaintenance.html',closable:false,icon: 'icon-house'" title="车辆维护费用管理"></div>
+  
+</div>

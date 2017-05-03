@@ -1,0 +1,33 @@
+﻿<div style="padding: 15px; overflow: hidden">
+    <form id="ui_distributeVehicle_editform" method="post" action="">
+        <table class="tableForm" width="100%">
+            <tr>
+                <th>学员姓名：
+                </th>
+                <td>
+                    <input type="hidden" id="ui_distributeVehicleid_edit" name="ui_distributeVehicleid_edit" />
+              <!--      <input type="text" name="ui_distributeVehicle_name_edit" id="ui_distributeVehicle_name_edit" class="easyui-validatebox"
+                        data-options="required:true" autocomplete="off" />-->
+                    <span id="ui_distributeVehicle_name_edit"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>学员编号：
+                </th>
+                <td>
+          <!--          <input type="text" name="ui_distributeVehicle_code_edit" id="ui_distributeVehicle_code_edit" class="easyui-validatebox" data-options="required:true"
+                        autocomplete="off" />-->
+                    <span id="ui_distributeVehicle_code_edit"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>车牌号:
+                </th>
+                <td>
+                    <input id="ui_distributeVehicle_vehicle_edit" class="easyui-combobox" name="ui_distributeVehicle_vehicle_edit"
+                        data-options="valueField:'Id',textField:'LicencePlateNum',url:'FinancialMgr/bg_vehicleHandler.ashx?action=getVehicleDT'" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
